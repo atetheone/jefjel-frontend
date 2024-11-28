@@ -1,0 +1,11 @@
+<mat-toolbar color="primary">
+  <span>JEFJEL</span>
+  <span class="spacer"></span>
+  
+  @if (isLoggedIn){
+    <button mat-button (click)="logout()">Log out</button>
+  } @else {
+    <button mat-button routerLink="/register">Sign up</button>
+    <button mat-button routerLink="/login">Login</button>
+  }
+</mat-toolbar>
