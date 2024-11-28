@@ -28,6 +28,7 @@
       "#features/*": ["app/features/*"],
       "#utils/*": ["app/core/utils/*"],
       "#components/*": ["app/shared/components/*"],
+      "#layouts/*": ["app/layouts/*"],
     },
   },
   "angularCompilerOptions": {
