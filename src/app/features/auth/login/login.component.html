@@ -1,31 +1,41 @@
-<div class="login-container">
-  <mat-card class="login-card">
-    <mat-card-title>Login</mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" />
-          <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-            A valid email is required
-          </mat-error>
-        </mat-form-field>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <mat-card class="w-full max-w-md bg-white shadow-lg rounded-lg">
+    <div class="p-8">
+      <mat-card-title class="text-center text-2xl font-bold mb-8">Login</mat-card-title>
+      <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" class="w-full">
+            @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+              <mat-error>
+                A valid email is required
+              </mat-error>
+            }
+          </mat-form-field>
 
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" />
-          <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-            Password must be at least 6 characters
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" class="w-full">
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+              <mat-error>
+                Password must be at least 6 characters
+              </mat-error>
+            }
+          </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
-          Login
-        </button>
-      </form> 
-    </mat-card-content>
-    <mat-card-actions>
-      <a mat-button routerLink="/register">Don't have an account? Register</a>
-    </mat-card-actions>
+          <button mat-raised-button color="primary" type="submit" 
+                  [disabled]="loginForm.invalid"
+                  class="w-full py-3 rounded-lg transition-colors">
+            Login
+          </button>
+        </form>
+      </mat-card-content>
+      <mat-card-actions class="flex justify-center mt-4">
+        <a mat-button routerLink="/register" class="text-primary-600 hover:text-primary-700">
+          Don't have an account? Register
+        </a>
+      </mat-card-actions>
+    </div>
   </mat-card>
 </div>

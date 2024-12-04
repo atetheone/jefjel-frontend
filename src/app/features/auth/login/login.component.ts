@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -17,7 +17,7 @@ import { AuthService } from '#core/services/auth.service';
   styleUrl: './login.component.sass'
 })
 export class LoginComponent {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -38,11 +38,9 @@ export class LoginComponent {
       this.authService.login({ email, password }).subscribe({
         next: (response) => {
           console.log('Login response:', response);
-          // Toaster notification
-          // Redirect user to dashboard
           this.router.navigate(['/dashboard']);
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Login error:', error);
           // Toaster notification
         }
