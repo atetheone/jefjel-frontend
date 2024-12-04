@@ -1,7 +1,14 @@
-<mat-sidenav #sidenav mode="side" opened>
-  <mat-nav-list>
-    <a mat-list-item routerLink="/admin/dashboard">Dashboard</a>
-    <a mat-list-item routerLink="/admin/users">Users</a>
-    <a mat-list-item routerLink="/admin/settings">Settings</a>
-  </mat-nav-list>
-</mat-sidenav>
+<mat-nav-list>
+  @for (item of menuItems; track item) {
+    <mat-list-item 
+      [routerLink]="item.route"
+      routerLinkActive="active-link"
+    >
+      <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+      <span matListItemTitle>{{ item.label }}</span>
+    </mat-list-item>
+  }
+  
+  <mat-divider></mat-divider>
+  
+</mat-nav-list>

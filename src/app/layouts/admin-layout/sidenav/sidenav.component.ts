@@ -1,18 +1,28 @@
-import { Component, ViewChild } from '@angular/core';
-import { MaterialModule } from '#shared/material/material.module';
-import { MatSidenav } from '@angular/material/sidenav';
-
-
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router'
+import { MaterialModule } from '#shared/material/material.module'
+import { AuthService } from '#services/auth.service'
+import { MenuItem } from '#types/menu'
+import { MenuService } from '#services/menu.service'
 @Component({
   selector: 'app-sidenav',
-  imports: [MaterialModule],
+  imports: [MaterialModule, RouterModule],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.sass'
 })
-export class SidenavComponent {
-  @ViewChild(MatSidenav) sidenav!: MatSidenav;
+export class SidenavComponent implements OnInit {
 
-  toggle() {
-    this.sidenav.toggle();
+  menuItems: MenuItem[] = [];
+
+  constructor(
+    private menuService: MenuService,
+    // private authService: AuthService,
+    // private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.menuItems = this.menuService.getMenuItems();
   }
+
+
 }
