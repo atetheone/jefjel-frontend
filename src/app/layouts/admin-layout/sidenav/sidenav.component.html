@@ -3,9 +3,13 @@
     <mat-list-item 
       [routerLink]="item.route"
       routerLinkActive="active-link"
+      [matTooltip]="!isExpanded ? item.label : ''"
+      matTooltipPosition="after"
     >
       <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-      <span matListItemTitle>{{ item.label }}</span>
+      @if (isExpanded) {
+        <span matListItemTitle>{{ item.label }}</span>
+      }
     </mat-list-item>
   }
   

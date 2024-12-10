@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router, RouterModule } from '@angular/router'
 import { MaterialModule } from '#shared/material/material.module'
 import { AuthService } from '#services/auth.service'
@@ -11,7 +11,7 @@ import { MenuService } from '#services/menu.service'
   styleUrl: './sidenav.component.sass'
 })
 export class SidenavComponent implements OnInit {
-
+  @Input() isExpanded = true;
   menuItems: MenuItem[] = [];
 
   constructor(
