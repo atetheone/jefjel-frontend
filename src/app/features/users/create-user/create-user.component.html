@@ -1,0 +1,78 @@
+<div class="container mx-auto p-4">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Create New User</h1>
+    
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Basic Information -->
+      <div class="grid grid-cols-2 gap-4">
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username">
+          @if (userForm.get('username')?.invalid && userForm.get('username')?.touched) {
+            <mat-error>Username is required (min 3 characters)</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email">
+          @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+            <mat-error>Valid email is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <mat-form-field>
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName">
+          @if (userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched) {
+            <mat-error>First name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName">
+          @if (userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched) {
+            <mat-error>Last name is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Role Selection -->
+      <mat-form-field class="w-full">
+        <mat-label>Roles</mat-label>
+        <mat-select formControlName="roles" multiple>
+          @for (role of availableRoles; track role.id) {
+            <mat-option [value]="role.id">
+              {{ role.name }}
+              <mat-list dense class="text-sm text-gray-600">
+                @for (permission of role.permissions; track permission.id) {
+                  <mat-list-item>
+                    {{ permission.resource }} - {{ permission.action }}
+                  </mat-list-item>
+                }
+              </mat-list>
+            </mat-option>
+          }
+        </mat-select>
+        @if (userForm.get('roles')?.invalid && userForm.get('roles')?.touched) {
+          <mat-error>At least one role is required</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="flex justify-end space-x-4">
+        <button mat-button type="button" (click)="goBack()">Cancel</button>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="userForm.invalid"
+        >
+          Create User
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
