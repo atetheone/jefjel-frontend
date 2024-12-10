@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '#services/auth.service'
 
 @Component({
   selector: 'app-navbar',
-  imports: [MatToolbarModule, MatButtonModule],
+  imports: [MatToolbarModule, MatButtonModule, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.sass',
 })

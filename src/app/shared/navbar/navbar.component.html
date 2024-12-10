@@ -1,11 +1,19 @@
 <mat-toolbar color="primary">
   <span>JEFJEL</span>
-  <span class="spacer"></span>
-  
-  @if (isLoggedIn){
-    <button mat-button (click)="logout()">Log out</button>
-  } @else {
-    <button mat-button routerLink="/register">Sign up</button>
-    <button mat-button routerLink="/login">Login</button>
-  }
+  <div class="flex-1"></div>
+
+  <div class="cta-buttons">
+    @if (isLoggedIn) {
+      <button mat-raised-button (click)="logout()">Log out</button>
+    } @else {
+      
+      <button mat-raised-button color="secondary" routerLink="/login">
+        Login
+      </button>
+      <button mat-raised-button color="accent" routerLink="/register">
+        Register
+      </button>
+    }
+  </div>
 </mat-toolbar>
+
