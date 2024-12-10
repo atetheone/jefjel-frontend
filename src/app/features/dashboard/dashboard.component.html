@@ -1,57 +1,9 @@
-<div class="dashboard">
-  <h1 class="mat-title">Welcome to the Dashboard</h1>
 
-  <div class="dashboard-grid">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Total Orders</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <h2>{{ dashboardData.orders }}</h2>
-      </mat-card-content>
-    </mat-card>
+<div class="dashboard-container">
+  <h1>Dashboard Overview</h1>
+  
 
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Total Revenue</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <h2>{{ dashboardData.revenue | currency }}</h2>
-      </mat-card-content>
-    </mat-card>
+  <div class="stats-grid">
 
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Active Users</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <h2>{{ dashboardData.users }}</h2>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="dashboard-table">
-    <mat-card>
-      <mat-card-title>Recent Orders</mat-card-title>
-      <table mat-table [dataSource]="dashboardData.recentOrders" class="mat-elevation-z8">
-        <ng-container matColumnDef="orderId">
-          <th mat-header-cell *matHeaderCellDef> Order ID </th>
-          <td mat-cell *matCellDef="let order"> {{ order.orderId }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="customer">
-          <th mat-header-cell *matHeaderCellDef> Customer </th>
-          <td mat-cell *matCellDef="let order"> {{ order.customer }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="amount">
-          <th mat-header-cell *matHeaderCellDef> Amount </th>
-          <td mat-cell *matCellDef="let order"> {{ order.amount | currency }} </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="['orderId', 'customer', 'amount']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['orderId', 'customer', 'amount'];"></tr>
-      </table>
-    </mat-card>
   </div>
 </div>
