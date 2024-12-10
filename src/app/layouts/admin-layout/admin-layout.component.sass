@@ -1,0 +1,21 @@
+.admin-layout-container
+  height: 100vh
+  display: flex
+  flex-direction: column
+
+.admin-sidenav-container
+  flex: 1
+  overflow: hidden
+
+.admin-sidenav
+  transition: width 0.3s ease
+  &.expanded
+    width: 250px
+  &.collapsed
+    width: 65px
+
+.content-wrapper
+  padding: 20px
+  background-color: #f4f4f4
+  height: 100%
+  overflow-y: auto

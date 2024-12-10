@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { MaterialModule } from '#shared/material/material.module';
 import { AuthService } from '#core/services/auth.service';
@@ -11,7 +11,9 @@ import { AuthService } from '#core/services/auth.service';
   styleUrl: './admin-navbar.component.sass'
 })
 export class AdminNavbarComponent {
-  toggleSidenav = new EventEmitter<void>();
+  currentPageTitle = 'Dashboard';
+  currentYear = new Date().getFullYear();
+  @Output() toggleSidenav = new EventEmitter<void>();
 
   constructor(
     private authService: AuthService,
