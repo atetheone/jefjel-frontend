@@ -14,3 +14,18 @@ export interface RoleResponse {
   updatedAt?: string
   permissions: PermissionResponse[]
 }
+
+export interface RoleRequest {
+  id: number
+  name: string
+  tenantId?: number
+  permissionIds: number[]
+}
+
+export interface UpdateRoleRequest extends RoleRequest {
+
+}
+
+export interface CreateRoleRequest extends RoleRequest {
+
+}

@@ -11,3 +11,13 @@ export interface PermissionResponse {
   createdAt?: string
   updatedAt?: string
 }
+
+export interface PermissionGroup {
+  resource: string;
+  actions: {
+    id: number;
+    action: string;
+    selected: boolean;
+  }[];
+}
+

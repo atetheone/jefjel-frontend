@@ -23,4 +23,5 @@ export interface UserResponse {
   updatedAt: string
   lastLoginAt?: string | null
   roles: RoleResponse[]
+  status?: string
 }
