@@ -72,8 +72,12 @@ export class AuthService {
     return this.isLoggedInSubject.value;
   }
 
-  resetPassword(token: string, password: string) {
-    return this.http.put(`${this.apiUrl}/auth/set-password/${token}`, { password });
+  isAdmin(): boolean {
+    return true;
+  }
+
+  resetPassword(token: string, password: string): Observable<ApiResponse<unknown>> {
+    return this.http.put<ApiResponse<unknown>>(`${this.apiUrl}/auth/set-password/${token}`, { password });
   }
 
 
