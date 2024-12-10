@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MaterialModule } from '#shared/material/material.module'
 import { AuthService } from '#core/services/auth.service';
+import { ToastService } from '#services/toast.service';
 
 @Component({
   selector: 'app-set-password',
@@ -27,7 +28,8 @@ export class SetPasswordComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastService: ToastService
   ) {
     this.setPasswordForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -56,18 +58,20 @@ export class SetPasswordComponent implements OnInit {
   onSubmit() {
     const { password } = this.setPasswordForm.value;
     this.authService.resetPassword(this.token, password)
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           // Password reset successful
           console.log('Password reset successful:', response);
+          this.toastService.success(`${response.message}`);
           this.router.navigate(['/login']); // Redirect to login after success
         },
-        (error) => {
+        error: (error) => {
           // Handle error
           // this.errorMessage = 'Password reset failed. Please try again.';
+          this.toastService.error('Password reset failed. Please try again.');
           console.error('Password reset error:', error); 
         }
-      );
+    });
   }
 
 }
