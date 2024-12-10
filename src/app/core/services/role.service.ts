@@ -4,7 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '#env/environment';
 import { Observable } from 'rxjs';
 import { User, UserResponse } from '#types/user';
-import { Role, RoleResponse } from '#types/role'
+import { 
+  Role, 
+  RoleResponse, 
+  CreateRoleRequest,
+  UpdateRoleRequest
+} from '#types/role'
 import { ApiResponse } from '#types/api_response';
 
 @Injectable({
@@ -29,12 +34,12 @@ export class RoleService {
   }
 
   // Create new user
-  createRole(role: Partial<Role>): Observable<ApiResponse<RoleResponse>> {
+  createRole(role: CreateRoleRequest): Observable<ApiResponse<RoleResponse>> {
     return this.http.post<ApiResponse<RoleResponse>>(this.roleApi, role);
   }
 
   // Update user
-  updateRole(id: number, role: Partial<Role>): Observable<ApiResponse<RoleResponse>> {
+  updateRole(id: number, role: UpdateRoleRequest): Observable<ApiResponse<RoleResponse>> {
     return this.http.put<ApiResponse<RoleResponse>>(`${this.roleApi}/${id}`, role);
   }
 
@@ -48,5 +53,6 @@ export class RoleService {
     return this.http.put<ApiResponse<RoleResponse>>(`${this.roleApi}/${userId}/roles`, { roleIds });
   }
 
-  // Assign user roles
+  // 
+
 }
