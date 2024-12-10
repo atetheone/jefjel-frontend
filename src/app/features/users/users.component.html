@@ -1,0 +1,89 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">User Management</h1>
+
+  <!-- Button to open the user creation dialog -->
+  <button mat-raised-button color="primary" routerLink="/dashboard/users/create">
+    <mat-icon>add</mat-icon>
+    Create New User
+  </button>
+
+  @if (viewModel$ | async; as vm) {
+    @switch (vm.status) {
+      @case ('loading') {
+        <div class="flex justify-center items-center p-8">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+      @case ('error') {
+        <div class="text-center p-8">
+          <mat-icon class="text-4xl text-red-500">error_outline</mat-icon>
+          <p class="mt-2 text-gray-600">Error loading users. Please try again later.</p>
+          <button mat-raised-button color="primary" class="mt-4" (click)="loadUsers()">
+            Retry
+          </button>
+        </div>
+      }
+      @case ('success') {
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+            <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+          </ng-container>
+      
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+            <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+          </ng-container>
+      
+          <!-- First name Column -->
+           <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>First name</th>
+            <td mat-cell *matCellDef="let user">{{ user.firstName }}</td>
+          </ng-container>
+      
+          <!-- Last name Column -->
+          <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Last name</th>
+            <td mat-cell *matCellDef="let user">{{ user.lastName }}</td>
+          </ng-container>
+      
+          <!-- Roles Column -->
+          <ng-container matColumnDef="roles">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Roles</th>
+            <td mat-cell *matCellDef="let user">
+              <mat-chip-listbox>
+                @for (role of user.roles; track role.id) {
+                  <mat-chip color="primary">
+                    {{ role.name }}
+                  </mat-chip>
+                }
+              </mat-chip-listbox>
+            </td>
+          </ng-container>
+      
+          <!-- Actions Column -->
+          <!-- <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let user">
+              <button mat-icon-button [routerLink]="['/dashboard/users/', user.id]">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container> -->
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr 
+            mat-row 
+            class="cursor-pointer hover:bg-gray-100"
+            *matRowDef="let row; columns: displayedColumns;" 
+            (click)="navigateToUserDetails(row.id)"
+          ></tr>
+        </table>
+      }
+    }
+  }
+  <!-- Paginator and Sorting -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+</div>
