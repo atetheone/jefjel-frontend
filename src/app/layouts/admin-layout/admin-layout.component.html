@@ -1,14 +1,22 @@
-<mat-sidenav-container>
-  <app-sidenav/>
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button mat-icon-button (click)="toggleSidenav()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>Admin Dashboard</span>
-      <span class="spacer"></span>
-      <button mat-button (click)="logout()">Logout</button>
-    </mat-toolbar>
-    <router-outlet/>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="admin-layout-container">
+  <app-admin-navbar (toggleSidenav)="toggleSidenav()"></app-admin-navbar>
+  
+  <mat-sidenav-container class="admin-sidenav-container">
+    <mat-sidenav 
+      #sidenav 
+      mode="side" 
+      opened="true" 
+      [style.width]="sidenavWidth()"
+      class="admin-sidenav"
+    >
+      <app-sidenav [isExpanded]="isExpanded()"></app-sidenav>
+    </mat-sidenav>
+    
+    <mat-sidenav-content [style.margin-left]="sidenavWidth()">
+      <div class="content-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
