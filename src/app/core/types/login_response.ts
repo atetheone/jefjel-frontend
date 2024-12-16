@@ -1,8 +1,8 @@
 import { ApiResponse } from './api_response';
-import { User } from './user';
+import { UserResponse } from './user';
 
 export interface LoginResponseData {
-  user: User
+  user: UserResponse
   token: string
 }
 
