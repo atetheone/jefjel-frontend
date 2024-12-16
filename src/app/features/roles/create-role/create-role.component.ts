@@ -1,15 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-create-role',
-//   imports: [],
-//   templateUrl: './create-role.component.html',
-//   styleUrl: './create-role.component.sass'
-// })
-// export class CreateRoleComponent {
-
-// }
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -112,6 +100,7 @@ export class CreateRoleComponent implements OnInit {
       next: (response) => {
         // Add new permission to groups and reset form
         const permission = response.data;
+        this.toastService.success(response.message);
         this.addPermissionToGroups(permission);
         this.newPermissionResource.reset();
         this.newPermissionAction.reset();
@@ -154,8 +143,9 @@ export class CreateRoleComponent implements OnInit {
       };
 
       this.roleService.createRole(roleData).subscribe({
-        next: () => {
-          this.router.navigate(['/admin/roles']);
+        next: (response) => {
+          this.toastService.success(response.message);
+          this.router.navigate(['/dashboard/roles']);
         },
         error: (error) => console.error('Error creating role:', error)
       });
