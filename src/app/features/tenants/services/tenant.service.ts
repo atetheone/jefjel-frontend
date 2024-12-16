@@ -25,6 +25,7 @@ export class TenantService {
   }
 
   getTenantById(tenantId: number): Observable<ApiResponse<TenantResponse>> {
+    console.log(`Calling [getTenantById] with id:${tenantId}`)
     return this.http.get<ApiResponse<TenantResponse>>(`${this.tenantsApiUrl}/${tenantId}`);
   }
 
@@ -34,5 +35,9 @@ export class TenantService {
 
   updateTenant(tenantId: number, tenant: UpdateTenantRequest): Observable<ApiResponse<TenantResponse>> {
     return this.http.put<ApiResponse<TenantResponse>>(`${this.tenantsApiUrl}/${tenantId}`, tenant);
+  }
+
+  deleteTenant(tenantId: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.tenantsApiUrl}/${tenantId}`);
   }
 }
