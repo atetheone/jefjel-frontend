@@ -174,7 +174,7 @@ export class UserDetailsComponent implements OnInit {
 
       this.userService.updateUser(this.userData.id, updatedUser).subscribe({
         next: (response) => {
-          this.router.navigate(['/admin/users']);
+          this.router.navigate(['/dashboard/users']);
           this.toastService.success(response.message)
         },
         error: (error) => {
@@ -186,6 +186,6 @@ export class UserDetailsComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/admin/users']);
+    this.router.navigate(['/dashboard/users']);
   }
 }
