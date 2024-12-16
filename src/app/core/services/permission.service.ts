@@ -22,4 +22,5 @@ export class PermissionService {
   createPermission(perm: Partial<PermissionResponse>): Observable<ApiResponse<PermissionResponse>> {
     return this.http.post<ApiResponse<PermissionResponse>>(this.apiUrl, perm);
   }
+  
 }
