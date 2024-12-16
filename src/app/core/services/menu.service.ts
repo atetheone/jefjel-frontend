@@ -1,43 +1,51 @@
 import { Injectable } from '@angular/core';
-import { MenuItem } from '#types/menu'
+import { MenuItem, MenuResponse } from '#types/menu'
+import { Observable, BehaviorSubject, of, map } from 'rxjs';
+import { catchError } from 'rxjs/operators'
 import { HttpClient } from '@angular/common/http'
+import { AuthService } from './auth.service';
+import { environment } from '#env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
+  private menuApi = `${environment.apiUrl}/menus`;
+  private menuSubject = new BehaviorSubject<MenuItem[]>([]);
+  menu$ = this.menuSubject.asObservable();
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) { }
 
-  getMenuItems(): MenuItem[] {
-    return [
-      {
-        label: 'Dashboard', 
-        icon: 'dashboard', 
-        route: '/dashboard'
-      },
-      {
-        label: 'User management', 
-        icon: 'people', 
-        route: '/dashboard/users'
-      },
-      {
-        label: 'Tenant management', 
-        icon: 'business', 
-        route: '/dashboard/tenants'
-      },
-      {
-        label: 'Roles & Permissions', 
-        icon: 'security', 
-        route: '/dashboard/roles'
-      },
-      // {
-      //   label: 'Analytics', 
-      //   icon: 'analytics', 
-      //   route: '/analytics'
-      // }
-    ];
+  getMenuItems(): Observable<MenuItem[]> {
+    return this.http.get<MenuResponse>(`${this.menuApi}/structure`).pipe(
+      map(response => response.data),
+      catchError(error => {
+        console.error('Error fetching menu:', error);
+        return of([]);
+      })
+    );
   }
+
+  loadMenu(): void {
+    this.getMenuItems().subscribe(menu => {
+      this.menuSubject.next(menu);
+    });
+  }
+
+  getUserMenu(): Observable<MenuResponse> {
+    return this.http.get<MenuResponse>(`${this.menuApi}/structure`)
+
+  }
+
+
+  // filteredMenus(): MenuItem[] {
+  //   const filteredMenu =  this.filterMenusByPermissions(this.getMenuItems());
+  //   console.log(JSON.stringify(filteredMenu, null, 3));
+  //   return filteredMenu;
+  //   // return this.getMenuItems();
+
+  // }
 }
