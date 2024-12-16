@@ -124,10 +124,11 @@ export class RoleDetailsComponent implements OnInit {
       this.roleService.updateRole(this.roleData.id, updatedRole).subscribe({
         next: (response) => {
           this.toastService.success(`${response.message}`)
-          this.router.navigate(['/admin/roles']);
+          this.router.navigate(['/dahsboard/roles']);
         },
         error: (error) => console.error('Error updating role:', error)
       });
     }
   }
+  
 }
