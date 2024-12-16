@@ -1,0 +1,137 @@
+<!-- <header class="marketplace-hero">
+  <div class="hero-content">
+    <h1>Bienvenue sur JefJel</h1>
+    <p>Découvrez des produits uniques et faits à la main</p>
+    <div class="hero-cta">
+      <button mat-raised-button color="primary" routerLink="/products">
+        Voir les produits
+      </button>
+      <button mat-stroked-button color="accent">
+        En savoir plus
+      </button>
+    </div>
+  </div>
+</header> -->
+
+<!-- Catégories en vedette -->
+<!-- <section class="featured-categories">
+  <h2> Catégories en vedette </h2>
+  <div class="categories-grid">
+    @for (category of featuredCategories; track category.name) {
+      <mat-card class="category-card">
+        <mat-card-content>
+          <mat-icon>{{ category.icon }}</mat-icon>
+          <h3>{{ category.name }}</h3>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</section> -->
+
+<!-- Produits en vedette -->
+<!-- <section class="featured-products">
+  <h2> Produits en vedette </h2>
+  <div class="products-grid">
+    @for (product of featuredProducts; track product.name) {
+      <mat-card class="product-card">
+        <img mat-card-image [src]="product.image" [alt]="product.name">
+        <mat-card-content>
+          <h3>{{ product.name }}</h3>
+          <p class="product-price">${{ product.price.toFixed(2) }}</p>
+          <div class="product-actions">
+            <button mat-mini-fab color="primary">
+              <mat-icon>add_shopping_cart</mat-icon>
+            </button>
+            <button mat-stroked-button color="accent">
+              View Details
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</section> -->
+
+<div class="marketplace-discovery-container">
+  <!-- Search and Filter Section -->
+  <div class="search-filter-section">
+    <mat-form-field appearance="fill" class="search-input">
+      <mat-label>Search Marketplaces</mat-label>
+      <input 
+        matInput 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="filterMarketplaces()"
+        placeholder="Find markets, vendors, categories"
+      >
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+
+    <div class="filter-chips">
+      <mat-chip-listbox multiple>
+        @for (category of categories; track category) {
+          <mat-chip-option 
+            [selected]="selectedCategories[category]"
+            (selectionChange)="onCategoryChange($event, category)"
+          >
+            {{ category }}
+          </mat-chip-option>
+        }
+      </mat-chip-listbox>
+    </div>
+  </div>
+
+  <!-- Marketplaces Grid -->
+  <div class="marketplaces-grid">
+    <mat-card 
+      *ngFor="let marketplace of filteredMarketplaces" 
+      class="marketplace-card"
+      (click)="openMarketplace(marketplace)"
+    >
+      <div class="marketplace-card-content">
+        <div class="marketplace-banner">
+          <img 
+            [src]="marketplace.coverImage" 
+            alt="{{ marketplace.name }} Cover"
+            class="cover-image"
+          >
+          <img 
+            [src]="marketplace.logo" 
+            alt="{{ marketplace.name }} Logo"
+            class="logo-image"
+          >
+        </div>
+        
+        <div class="marketplace-details">
+          <h3>{{ marketplace.name }}</h3>
+          <p class="marketplace-description">
+            {{ marketplace.description }}
+          </p>
+          
+          <div class="marketplace-stats">
+            <div class="stat">
+              <mat-icon>storefront</mat-icon>
+              <span>{{ marketplace.productCount }} Products</span>
+            </div>
+            <div class="stat">
+              <mat-icon>star</mat-icon>
+              <span>{{ marketplace.rating.toFixed(1) }}</span>
+            </div>
+          </div>
+          
+          <mat-chip>{{ marketplace.category }}</mat-chip>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- No Results -->
+  <div 
+    *ngIf="filteredMarketplaces.length === 0" 
+    class="no-results"
+  >
+    <mat-icon>store_off</mat-icon>
+    <h2>No Marketplaces Found</h2>
+    <p>Try adjusting your search or filters</p>
+  </div>
+</div>

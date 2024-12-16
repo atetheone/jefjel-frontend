@@ -1,0 +1,78 @@
+.marketplace-discovery-container
+  max-width: 1200px
+  margin: 0 auto
+  padding: 20px
+
+.search-filter-section
+  display: flex
+  flex-direction: column
+  gap: 20px
+  margin-bottom: 30px
+
+.search-input
+  width: 100%
+  max-width: 400px
+
+.filter-chips
+  display: flex
+  gap: 10px
+  flex-wrap: wrap
+
+.marketplaces-grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+  gap: 20px
+
+.marketplace-card
+  cursor: pointer
+  transition: transform 0.3s
+  &:hover
+    transform: scale(1.02)
+
+  &-content
+    display: flex
+    flex-direction: column
+
+.marketplace-banner
+  position: relative
+  height: 200px
+
+.cover-image
+  width: 100%
+  height: 100%
+  object-fit: cover
+
+.logo-image
+  position: absolute
+  bottom: -40px
+  left: 20px
+  width: 80px
+  height: 80px
+  border-radius: 50%
+  border: 4px solid white
+  object-fit: cover
+
+.marketplace-details
+  padding: 50px 20px 20px
+
+.marketplace-description
+  color: #666
+  margin: 10px 0
+  height: 60px
+  overflow: hidden
+  text-overflow: ellipsis
+
+.marketplace-stats
+  display: flex
+  justify-content: space-between
+  margin: 15px 0
+
+.stat
+  display: flex
+  align-items: center
+  gap: 5px
+
+.no-results
+  text-align: center
+  padding: 50px
+  color: #888
