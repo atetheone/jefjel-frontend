@@ -1,0 +1,104 @@
+<div class="container mx-auto p-4">
+  @if (tenantDetails$ | async; as tenantDetails) {
+    @switch (tenantDetails.status) {
+      @case ('loading') {
+        <div class="flex justify-center items-center p-1">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+      @case ('error') {
+        <div class="error-container">
+          <mat-icon color="warn">error_outline</mat-icon>
+          <p>{{ tenantDetails.error }}</p>
+          <button mat-raised-button color="primary" (click)="loadTenantDetails()">
+            Retry
+          </button>
+        </div>
+      }
+      @case ('success') {
+        <div class="flex justify-between items-center">
+          <!-- Tenant Header -->
+          <div class="tenant-header">
+            <div class="flex items-center">
+              <div class="tenant-avatar">
+                {{ tenantDetails.data!.name.charAt(0) }}
+              </div>
+              <div class="ml-4">
+                <h1 class="text-2xl font-bold">{{ tenantDetails.data!.name }}</h1>
+                <p class="text-gray-500">{{ tenantDetails.data!.slug }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Actions -->
+          <div class="tenant-actions space-x-4">
+            <button mat-raised-button color="primary" (click)="editTenant()">
+              Edit Tenant
+            </button>
+            <button mat-stroked-button color="warn" (click)="confirmDelete()">
+              Delete Tenant
+            </button>
+          </div>
+        </div>
+
+        <!-- Tenant Navigation -->
+        <mat-tab-group class="mt-6">
+          <mat-tab label="Overview">
+            <div class="p-4 grid grid-cols-1 gap-2 mt-6">
+              <h2 class="text-xl font-semibold mb-4">Tenant Details</h2>
+              <!-- Description Card -->
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>Description</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="mt-4">
+                  <p class="whitespace-pre-wrap">{{ tenantDetails.data!.description || 'No description provided' }}</p>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card>
+                <mat-card-content>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <p class="text-gray-600">Domain</p>
+                      <p>{{ tenantDetails.data!.domain || 'Not set' }}</p>
+                    </div>
+                    
+                    <div>
+                      <p class="text-gray-600">Status</p>
+                      <mat-chip [color]="tenantDetails.data!.status === 'active' ? 'primary' : 'warn'" selected>
+                        {{ tenantDetails.data!.status }}
+                      </mat-chip>
+                    </div>
+                    <div>
+                      <p class="text-gray-600">Created At</p>
+                      <p>{{ tenantDetails.data!.createdAt | date:'medium' }}</p>
+                    </div>
+                    <div>
+                      <p class="text-gray-600">Last Updated</p>
+                      <p>{{ tenantDetails.data!.updatedAt | date:'medium' }}</p>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-tab>
+          
+          <mat-tab label="Users">
+            <div class="p-4">
+              <h2 class="text-xl font-semibold mb-4">Tenant Users</h2>
+              <!-- Add tenant users management here -->
+            </div>
+          </mat-tab>
+          
+          <mat-tab label="Settings">
+            <div class="p-4">
+              <h2 class="text-xl font-semibold mb-4">Tenant Settings</h2>
+              <!-- Add tenant settings here -->
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      }
+    }
+  }
+</div>
