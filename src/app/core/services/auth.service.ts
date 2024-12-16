@@ -17,8 +17,9 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false); // Tracks login state
   public isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable(); // Exposed as observable
   private apiUrl = environment.apiUrl;
-  private userSubject = new BehaviorSubject<any>(null);
+  userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
+  userPermissions: string[] = [];
 
   private isLoggedIn: boolean = false;
 
@@ -27,21 +28,21 @@ export class AuthService {
     private snackBar: MatSnackBar
   ) { 
     const token = localStorage.getItem('token');
+    const storedPermissions = localStorage.getItem('permissions');
+    console.log(storedPermissions);
+    const storedUser = localStorage.getItem('user');
+
     this.isLoggedInSubject.next(!!token);
+    if (storedPermissions) {
+      this.userPermissions = JSON.parse(storedPermissions);
+    }
+    if (storedUser) {
+      this.userSubject.next(JSON.parse(storedUser));
+    }
   }
 
-  registerUser(user: User): Observable<UserRegistrationResponse | unknown> {
-    return this.http.post<UserRegistrationResponse>(`${this.apiUrl}/auth/register-user`, user)
-      .pipe(
-        tap((response: UserRegistrationResponse) => {
-          this.showToast('Registration done successfully', 'success')
-        }),
-        catchError((err) => {
-          this.showToast('Registration failed', 'error');
-
-          return err
-        })
-      )
+  registerUser(user: User): Observable<UserRegistrationResponse> {
+    return this.http.post<UserRegistrationResponse>(`${this.apiUrl}/auth/register-user`, user);
   }
 
   login({ email, password }: LoginRequest): Observable<LoginResponse> {
@@ -53,19 +54,25 @@ export class AuthService {
       );
   }
 
-  getUser(): Observable<ApiResponse<UserResponse>> {
-    return this.http.get<ApiResponse<UserResponse>>(`${this.apiUrl}/me`).pipe(
-      map((user) => {
-        this.userSubject.next(user);
-        return user;
+  getUser(): Observable<UserResponse> {
+    return this.http.get<ApiResponse<UserResponse>>(`${this.apiUrl}/auth/me`).pipe(
+      map((response) => {
+        this.userSubject.next(response.data);
+        this.userPermissions = this.getUserPermissions(response.data);
+        console.dir(this.userPermissions, { depth: null })
+        return response.data;
       })
     );
   }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('permissions');
+    localStorage.removeItem('user');
+    
     this.userSubject.next(null);
-    this.isLoggedInSubject.next(false)
+    this.isLoggedInSubject.next(false);
+    this.userPermissions = [];
   }
 
   isAuthenticated(): boolean {
@@ -80,13 +87,41 @@ export class AuthService {
     return this.http.put<ApiResponse<unknown>>(`${this.apiUrl}/auth/set-password/${token}`, { password });
   }
 
+  private getUserPermissions(user: UserResponse): string[] {
+    const permissions =  user.roles.flatMap(role => 
+      role.permissions.map(permission => 
+        `${permission.action}:${permission.resource}`
+      )
+    );
+    localStorage.setItem('permissions', JSON.stringify(permissions));
+    return permissions;
+  }
+
+  hasPermissions(permissions: string[]): boolean {
+    const storedPermissions = localStorage.getItem('permissions');
+    if (!storedPermissions) {
+      return false;
+    }
+    const userPerms = JSON.parse(storedPermissions);
+    return permissions.every(permission => 
+      userPerms.includes(permission)
+    );
+  }
+
 
   private handleSuccessResponse(response: LoginResponse, message: string = '', type: 'log' | 'reg' = 'log') {
 
+    this.getUser();
     if (response.success) { 
       localStorage.setItem('token', response.data.token);
-      this.userSubject.next(response.data.user);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      this.userSubject.next(response.data!.user);
       this.isLoggedInSubject.next(true);
+
+      // Update permissions
+      this.userPermissions = this.getUserPermissions(response.data.user);
+      
 
       this.showToast('Login successful', 'success');
     }
