@@ -33,8 +33,8 @@ export class UserService {
   }
 
   // Update user
-  updateUser(id: number, user: Partial<User>): Observable<ApiResponse<UserResponse>> {
-    return this.http.put<ApiResponse<UserResponse>>(`${this.userApi}/${id}`, user);
+  updateUser(userId: number, user: Partial<User>): Observable<ApiResponse<UserResponse>> {
+    return this.http.put<ApiResponse<UserResponse>>(`${this.userApi}/${userId}`, user);
   }
 
   // Delete user
@@ -47,5 +47,8 @@ export class UserService {
     return this.http.put<ApiResponse<UserResponse>>(`${this.userApi}/${userId}/roles`, { roleIds });
   }
 
-  // Assign user roles
+  updateUserProfile(user: Partial<User>): Observable<ApiResponse<UserResponse>> {
+    return this.http.put<ApiResponse<UserResponse>>(`${this.userApi}/profile`, user);
+  }
+
 }

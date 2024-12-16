@@ -14,11 +14,13 @@ import { RoleResponse } from '#app/core/types/role';
 
 import { catchError, throwError, BehaviorSubject, map, of } from 'rxjs';
 import { DataState } from '#types/data_state';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 @Component({
   selector: 'app-users',
-  imports: [MaterialModule, RouterModule, CommonModule],
+  imports: [MaterialModule, RouterModule, CommonModule, ReactiveFormsModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.sass'
 })
@@ -40,12 +42,22 @@ export class UsersComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-
+  searchControl = new FormControl('');
 
   constructor(
     private userService: UserService,
     private router: Router
-  ) { }
+  ) { 
+    // Set up search filter
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe(value => {
+        this.applyFilter(value || '');
+      });
+  }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -60,6 +72,18 @@ export class UsersComponent implements OnInit {
       }
     })
 
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim().toLowerCase();
+    this.dataSource.filterPredicate = (data: UserResponse, filter: string) => {
+      return data.username.toLowerCase().includes(filter) ||
+             data.email.toLowerCase().includes(filter) ||
+             data.firstName.toLowerCase().includes(filter) ||
+             data.lastName.toLowerCase().includes(filter) ||
+             data.roles.some(role => role.name.toLowerCase().includes(filter));
+    };
+    this.dataSource.filter = filterValue;
   }
 
   loadUsers() {

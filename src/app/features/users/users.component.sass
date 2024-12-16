@@ -1,0 +1,51 @@
+:host ::ng-deep
+  .mat-mdc-row
+    &:hover
+      background-color: rgba(0, 0, 0, 0.04)
+      cursor: pointer
+
+  // Actions column styling
+  .mat-column-actions
+    width: 100px
+    padding-right: 8px !important
+    text-align: right
+    
+    .mat-icon-button
+      width: 32px
+      height: 32px
+      line-height: 32px
+      
+      .mat-icon
+        font-size: 18px
+        
+      &:hover
+        background-color: rgba(0, 0, 0, 0.04)
+        
+  // Make sure header aligns with content
+  .mat-header-cell.mat-column-actions
+    text-align: right
+
+  // Add spacing between action buttons
+  .action-buttons
+    display: flex
+    gap: 8px
+
+  // Style for action buttons container
+  .actions-container
+    opacity: 0
+    transition: opacity 0.2s ease
+
+  // Show actions on row hover
+  .mat-mdc-row:hover
+    .actions-container
+      opacity: 1
+
+  // Header Actions Bar
+  .header-actions
+    gap: 16px
+    margin-bottom: 16px
+
+    .search-field
+      flex: 1
+      max-width: 400px
+      margin: 0
