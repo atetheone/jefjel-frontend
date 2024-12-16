@@ -1,0 +1,26 @@
+.breadcrumb
+  display: flex
+  align-items: center
+  list-style: none
+  padding: 0.75rem 1rem
+  margin-bottom: 1rem
+  background-color: #f8f9fa
+  border-radius: 0.25rem
+
+.breadcrumb-item
+  display: flex
+  align-items: center
+  a
+    color: #007bff
+    text-decoration: none
+    cursor: pointer
+    &:hover
+      text-decoration: underline
+  &.active
+    a
+      color: #6c757d
+      pointer-events: none
+
+.breadcrumb-separator
+  margin: 0 0.5rem
+  color: #6c757d

@@ -1,0 +1,22 @@
+@if (breadcrumbs$ | async; as breadcrumbs) {
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      @for (breadcrumb of breadcrumbs; track breadcrumb.label; let last = $last) {
+        <li 
+          class="breadcrumb-item" 
+          [ngClass]="{'active': last}"
+        >
+          <a 
+            [routerLink]="['/' + breadcrumb.url]"
+            [attr.aria-current]="last ? 'page' : null"
+          >
+            {{ breadcrumb.label }}
+          </a>
+        </li>
+        @if (!last) {
+          <li class="breadcrumb-separator">></li>
+        }
+      }
+    </ol>
+  </nav>  
+}
