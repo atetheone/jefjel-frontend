@@ -41,7 +41,7 @@
       </div>
 
       <!-- Role Selection -->
-      <mat-form-field class="w-full">
+      <!-- <mat-form-field class="w-full">
         <mat-label>Roles</mat-label>
         <mat-select formControlName="roles" multiple>
           @for (role of availableRoles; track role.id) {
@@ -60,7 +60,60 @@
         @if (userForm.get('roles')?.invalid && userForm.get('roles')?.touched) {
           <mat-error>At least one role is required</mat-error>
         }
-      </mat-form-field>
+      </mat-form-field> -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Role Assignment</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Search Roles -->
+          <mat-form-field class="w-full mb-4">
+            <mat-icon matPrefix class="mr-2">search</mat-icon>
+            <input 
+              matInput 
+              [formControl]="roleSearchCtrl"
+              placeholder="Search roles..."
+            >
+          </mat-form-field>
+      
+          <!-- Role Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @for (role of filteredRoles; track role.id) {
+              <mat-card class="role-card border border-gray-200">
+                <mat-card-header>
+                  <mat-checkbox
+                    [checked]="isRoleSelected(role.id)"
+                    (change)="toggleRole(role.id)"
+                    class="font-medium"
+                  >
+                    {{ role.name }}
+                  </mat-checkbox>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="mt-2">
+                    <div class="flex flex-wrap gap-1">
+                      @for (permission of groupPermissions(role.permissions); track permission.resource) {
+                        <mat-chip class="text-xs">
+                          {{ permission.resource }}: 
+                          <span class="text-gray-600">
+                            {{ permission.actions.join(', ') }}
+                          </span>
+                        </mat-chip>
+                      }
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+      
+          @if (!filteredRoles.length) {
+            <div class="text-center p-4 text-gray-500">
+              No roles match your search
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
 
       <div class="flex justify-end space-x-4">
         <button mat-button type="button" (click)="goBack()">Cancel</button>
