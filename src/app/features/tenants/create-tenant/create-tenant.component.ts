@@ -9,7 +9,7 @@ import {
 import { MaterialModule } from '#shared/material/material.module';
 import { CommonModule } from '@angular/common';
 import { TenantService } from '../services/tenant.service';
-import { ToastService } from '#services/toast.service'; 
+import { ToastService } from '#shared/services/toast.service'; 
 import { CreateTenantRequest, UpdateTenantRequest } from '#types/tenant';
 
 @Component({

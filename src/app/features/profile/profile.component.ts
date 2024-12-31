@@ -5,7 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from '#shared/material/material.module';
 
 import { AuthService } from '#services/auth.service';
-import { ToastService } from '#services/toast.service';
+import { ToastService } from '#shared/services/toast.service';
 import { UserService } from '#features/users/services/user.service';
 import { UserResponse } from '#types/user';
 

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } 
 import { MaterialModule } from '#shared/material/material.module';
 import { RoleService } from '#services/role.service';
 import { PermissionService } from '#services/permission.service';
-import { ToastService } from '#services/toast.service';
+import { ToastService } from '#shared/services/toast.service';
 import { Permission, PermissionResponse, PermissionGroup } from '#types/permission';
 import { CommonModule } from '@angular/common';
 

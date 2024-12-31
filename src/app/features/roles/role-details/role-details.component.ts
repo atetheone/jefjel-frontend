@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MaterialModule } from '#shared/material/material.module';
 import { CommonModule } from '@angular/common';
-import { ToastService } from '#services/toast.service'
+import { ToastService } from '#shared/services/toast.service'
 import { RoleService } from '#services/role.service';
 import { PermissionService } from '#services/permission.service';
 import { RoleResponse } from '#types/role';
