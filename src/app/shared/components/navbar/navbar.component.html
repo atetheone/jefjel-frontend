@@ -1,0 +1,113 @@
+<!-- <mat-toolbar color="primary">
+  <span class="text-xl font-bold cursor-pointer" routerLink="/">JEFJEL</span> -->
+
+    <!-- Navigation Links -->
+    <!-- <div class="flex-1 ml-8 hidden md:flex space-x-4">
+      <a mat-button routerLink="/markets">Markets</a>
+      <a mat-button routerLink="/categories">Categories</a>
+      <a mat-button routerLink="/products">Products</a>
+    </div> -->
+
+  <!-- <div class="cta-buttons">
+    @if (isLoggedIn) {
+      <button mat-raised-button (click)="logout()">Log out</button>
+    } @else {
+      <button mat-button routerLink="/login">
+        Login
+      </button>
+      <button mat-raised-button color="accent" routerLink="/register" class="ml-2">
+        Become a Seller
+      </button>
+    }
+  </div>
+</mat-toolbar> -->
+
+<!-- navbar.component.html -->
+<mat-toolbar class="bg-white border-b">
+  <div class=" flex items-center justify-between max-w-7xl mx-auto w-full px-4 h-16">
+    <!-- Logo -->
+    <div class="flex items-center">
+      <a routerLink="/" class="flex items-center space-x-2">
+        <img src="assets/logo-jefjel.png" alt="Logo" class="h-8 w-auto">
+        <span class="text-xl font-semibold text-gray-900">JEFJEL</span>
+      </a>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="hidden md:flex space-x-8">
+      @for (item of mainNavItems; track item.path) {
+        <a [routerLink]="item.path"
+           routerLinkActive="text-blue-600"
+           class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+          {{item.label}}
+        </a>
+      }
+    </nav>
+
+    <!-- Right Section -->
+    <div class="flex items-center space-x-6">
+      <!-- Cart -->
+      <a routerLink="/cart" 
+         class="text-gray-700 hover:text-blue-600 relative">
+        <mat-icon [matBadge]="cartItemCount()"
+                  [matBadgeHidden]="cartItemCount() === 0"
+                  matBadgeColor="warn"
+                  class="text-2xl">
+          shopping_cart
+        </mat-icon>
+      </a>
+
+      <!-- User Menu -->
+      @if (isAuthenticated) {
+        <button mat-button [matMenuTriggerFor]="userMenu" 
+                class="flex items-center space-x-2">
+          <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+            <mat-icon class="text-gray-600">account_circle</mat-icon>
+          </div>
+          <!-- <mat-icon>expand_more</mat-icon> -->
+        </button>
+
+        <mat-menu #userMenu="matMenu" class="mt-2">
+          @for (item of userMenuItems; track item.path) {
+            <a mat-menu-item [routerLink]="item.path">
+              <mat-icon>{{item.icon}}</mat-icon>
+              <span>{{item.label}}</span>
+            </a>
+          }
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      } @else {
+        <div class="flex items-center space-x-4">
+          <a mat-button routerLink="/login">
+            Login
+          </a>
+          <a mat-raised-button 
+             color="primary" 
+             routerLink="/register">
+            Register
+          </a>
+        </div>
+      }
+
+      <!-- Mobile Menu Button -->
+      <!-- <button mat-icon-button 
+              class="md:hidden"
+              [matMenuTriggerFor]="mobileMenu">
+        <mat-icon>menu</mat-icon>
+      </button> -->
+    </div>
+  </div>
+</mat-toolbar>
+
+<!-- Mobile Menu -->
+<!-- <mat-menu #mobileMenu="matMenu">
+  @for (item of mainNavItems; track item.path) {
+    <a mat-menu-item [routerLink]="item.path">
+      {{item.label}}
+    </a>
+  }
+</mat-menu> -->
