@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '#shared/material/material.module';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '#shared/components/confirm-dialog/confirm-dialog.component';
-import { ToastService } from '#services/toast.service';
+import { ToastService } from '#shared/services/toast.service';
 import { TenantService } from '../services/tenant.service';
 import { TenantResponse, TenantDetails } from '#types/tenant';
 import { catchError, BehaviorSubject, map, of } from 'rxjs';
