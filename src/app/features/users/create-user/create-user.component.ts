@@ -10,7 +10,7 @@ import {
 import { MaterialModule } from '#shared/material/material.module';
 import { UserService } from '#features/users/services/user.service';
 import { RoleService } from '#services/role.service';
-import { ToastService } from '#services/toast.service';
+import { ToastService } from '#shared/services/toast.service';
 import { RoleResponse } from '#types/role';
 import { PermissionResponse } from '#types/permission';
 
