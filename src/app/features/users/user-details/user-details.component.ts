@@ -6,7 +6,7 @@ import { startWith, map } from 'rxjs/operators';
 import { MaterialModule } from '#shared/material/material.module';
 import { UserService } from '#features/users/services/user.service';
 import { RoleService } from '#services/role.service';
-import { ToastService } from '#services/toast.service';
+import { ToastService } from '#shared/services/toast.service';
 import { UserResponse } from '#types/user';
 import { RoleResponse } from '#types/role';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
