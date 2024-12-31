@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MaterialModule } from '#shared/material/material.module'
 import { AuthService } from '#core/services/auth.service';
-import { ToastService } from '#services/toast.service';
+import { ToastService } from '#shared/services/toast.service';
 
 @Component({
   selector: 'app-set-password',

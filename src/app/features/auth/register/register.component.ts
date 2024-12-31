@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '#shared/material/material.module';
 import { AuthService } from '#services/auth.service';
-import { ToastService } from '#services/toast.service';
+import { ToastService } from '#shared/services/toast.service';
 
 @Component({
   selector: 'app-register',

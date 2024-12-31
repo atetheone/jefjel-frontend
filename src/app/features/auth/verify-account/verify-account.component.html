@@ -1,0 +1,41 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <mat-card class="w-full max-w-md">
+    <mat-card-content class="p-6">
+      @if (isLoading) {
+        <div class="text-center">
+          <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+          <p class="mt-4 text-gray-600">Verifying your account...</p>
+        </div>
+      } @else if (isVerified) {
+        <div class="text-center">
+          <mat-icon class="text-green-500 text-6xl">check_circle</mat-icon>
+          <h2 class="text-2xl font-bold mt-4">Account Verified!</h2>
+          <p class="mt-2 text-gray-600">Your account has been successfully verified.</p>
+          <button mat-raised-button color="primary" class="mt-6" routerLink="/login">
+            Proceed to Login
+          </button>
+        </div>
+      } @else if (isExpired) {
+        <div class="text-center">
+          <mat-icon class="text-red-500 text-6xl">error_outline</mat-icon>
+          <h2 class="text-2xl font-bold mt-4">Verification Link Expired</h2>
+          <p class="mt-2 text-gray-600">The verification link has expired.</p>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="mt-6" 
+            (click)="resendVerification()"
+            [disabled]="isResending"
+          >
+            @if (isResending) {
+              <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+              Sending...
+            } @else {
+              Resend Verification Email
+            }
+          </button>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

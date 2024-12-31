@@ -1,0 +1,112 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  @if (market$ | async; as vm) {
+    @switch (vm.status) {
+      @case ('loading') {
+        <div class="flex justify-center items-center p-8">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+      @case ('error') {
+        <div class="text-center p-8">
+          <mat-icon class="text-6xl text-red-500">error_outline</mat-icon>
+          <p class="mt-2 text-gray-600">{{vm.error}}</p>
+          <button mat-raised-button color="primary" class="mt-4" 
+                  (click)="loadMarketDetails(vm.data?.id!)">
+            Retry
+          </button>
+        </div>
+      }
+      @case ('success') {
+        <!-- Market Header -->
+        <div class="relative">
+          <img [src]="vm.data?.coverImage" 
+               [alt]="vm.data?.name"
+               class="w-full h-64 object-cover rounded-t-lg">
+          <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/50 to-transparent">
+            <div class="flex items-center">
+              <img [src]="vm.data?.logo" 
+                   [alt]="vm.data?.name + ' logo'"
+                   class="w-24 h-24 rounded-full border-4 border-white">
+              <div class="ml-6 text-white">
+                <h1 class="text-3xl font-bold">{{vm.data?.name}}</h1>
+                <div class="flex items-center mt-2">
+                  <mat-icon class="text-yellow-400 mr-1">star</mat-icon>
+                  <span>{{vm.data?.rating}}</span>
+                  <span class="mx-2">•</span>
+                  <span>{{vm.data?.productCount}} Products</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Market Content -->
+        <div class="mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <!-- Sidebar -->
+          <div class="lg:col-span-1">
+            <mat-card>
+              <mat-card-content>
+                <h2 class="text-xl font-semibold mb-4">About</h2>
+                <p class="text-gray-600">{{vm.data?.description}}</p>
+                
+                <mat-divider class="my-4"></mat-divider>
+                
+                <div class="space-y-4">
+                  <div>
+                    <p class="text-sm text-gray-500">Status</p>
+                    <mat-chip-set>
+                      <mat-chip [color]="vm.data?.status === 'active' ? 'primary' : 'warn'" selected>
+                        {{vm.data?.status}}
+                      </mat-chip>
+                    </mat-chip-set>
+                  </div>
+                  
+                  <div>
+                    <p class="text-sm text-gray-500">Member Since</p>
+                    <p>{{vm.data?.createdAt | date}}</p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <!-- Products Grid -->
+          <div class="lg:col-span-3">
+            @if (products$ | async; as productsVm) {
+              @switch (productsVm.status) {
+                @case ('loading') {
+                  <div class="flex justify-center items-center p-8">
+                    <mat-spinner diameter="40"></mat-spinner>
+                  </div>
+                }
+                @case ('error') {
+                  <div class="text-center p-8">
+                    <mat-icon class="text-6xl text-red-500">error_outline</mat-icon>
+                    <p class="mt-2 text-gray-600">{{productsVm.error}}</p>
+                  </div>
+                }
+                @case ('success') {
+                  @if (productsVm.data?.length) {
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      @for (product of productsVm.data; track product.id) {
+                        <app-marketplace-product-card
+                          [product]="product"
+                          (addToCart)="addToCart($event)"
+                        />
+                      }
+                    </div>
+                  } @else {
+                    <div class="text-center p-8">
+                      <mat-icon class="text-6xl text-gray-400">inventory_2</mat-icon>
+                      <p class="mt-2 text-gray-600">No products available</p>
+                    </div>
+                  }
+                }
+              }
+            }
+          </div>
+        </div>
+      }
+    }
+  }
+</div>
