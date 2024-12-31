@@ -1,0 +1,49 @@
+<mat-card class="product-card hover:shadow-lg transition-shadow">
+  <img 
+    [src]="product.images?.[0]?.url || 'assets/images/placeholder.png'"
+    [alt]="product.name"
+    class="w-full h-48 object-cover"
+  >
+  
+  <mat-card-content class="p-4">
+    <div class="flex justify-between items-start">
+      <div>
+        <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+        <p class="text-gray-600">SKU: {{ product.sku }}</p>
+      </div>
+      <mat-chip-set>
+        <mat-chip [color]="product.stock > 0 ? 'primary' : 'warn'" selected>
+          {{ product.stock }} in stock
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+    
+    <p class="text-xl font-bold mt-2">${{ product.price }}</p>
+    
+    @if (product.categories.length) {
+      <div class="mt-2 flex flex-wrap gap-1">
+        @for (category of product.categories; track category.id) {
+          <mat-chip size="small">{{ category.name }}</mat-chip>
+        }
+      </div>
+    }
+  </mat-card-content>
+
+  <mat-card-actions class="flex justify-end p-4 pt-0">
+    <button 
+      mat-icon-button 
+      [routerLink]="['/dashboard/products', product.id]"
+      matTooltip="View Details"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button 
+      mat-icon-button 
+      color="warn"
+      (click)="onDelete.emit(product.id)"
+      matTooltip="Delete Product"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>
