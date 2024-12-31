@@ -1,0 +1,16 @@
+:host
+  .image-preview
+    position: relative
+    img
+      transition: opacity 0.2s
+      &:hover
+        opacity: 0.8
+    
+    .remove-button
+      position: absolute
+      top: -8px
+      right: -8px
+      z-index: 1
+
+  input[type="file"]
+    display: none
