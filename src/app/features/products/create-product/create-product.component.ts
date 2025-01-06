@@ -61,9 +61,14 @@ export class CreateProductComponent implements OnInit {
       sku: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
       basePrice: [''],
-      stock: [0, [Validators.required, Validators.min(0)]],
       isActive: [true],
-      categoryIds: [[]]
+      categoryIds: [[]],
+      inventory: this.fb.group({
+        quantity: [0, [Validators.required, Validators.min(0)]],
+        reorderPoint: [10, [Validators.required, Validators.min(0)]],
+        reorderQuantity: [20, [Validators.required, Validators.min(1)]],
+        lowStockThreshold: [5, [Validators.required, Validators.min(0)]]
+      })
     });
   }
 
@@ -98,11 +103,6 @@ export class CreateProductComponent implements OnInit {
   }
 
 
-
-  // isCategorySelected(categoryId: number): boolean {
-  //   return this.selectedCategories.includes(categoryId);
-  // }
-
   private loadProductData() {
     this.productService.getProductById(this.productId!).subscribe({
       next: (response) => {
@@ -114,9 +114,14 @@ export class CreateProductComponent implements OnInit {
           sku: product.sku,
           price: product.price,
           basePrice: product.basePrice,
-          stock: product.stock,
           isActive: product.isActive,
-          categoryIds: product.categories.map(c => c.id)
+          categoryIds: product.categories.map(c => c.id),
+          inventory: {
+            quantity: product.inventory?.quantity || 0,
+            reorderPoint: product.inventory?.reorderPoint || 10,
+            reorderQuantity: product.inventory?.reorderQuantity || 20,
+            lowStockThreshold: product.inventory?.lowStockThreshold || 5
+          }
         });
       },
       error: (error) => {
