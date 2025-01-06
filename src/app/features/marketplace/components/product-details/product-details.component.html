@@ -1,0 +1,134 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  @if (product$ | async; as vm) {
+    @switch (vm.status) {
+      @case ('loading') {
+        <div class="flex justify-center items-center p-8">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+      @case ('error') {
+        <div class="text-center p-8">
+          <mat-icon class="text-6xl text-red-500">error_outline</mat-icon>
+          <p class="mt-2 text-gray-600">{{vm.error}}</p>
+          <button mat-raised-button color="primary" class="mt-4" 
+                  (click)="loadProduct(productId)">
+            Retry
+          </button>
+        </div>
+      }
+      @case ('success') {
+        @if (vm.data) {
+          <!-- <pre>
+            {{ toString(vm.data) }}
+          </pre> -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Product Images -->
+            <div class="space-y-4">
+              <div class="bg-white p-4 rounded-lg shadow">
+                <img [src]="vm.data.images?.[selectedImageIndex]?.url"
+                     [alt]="vm.data.name"
+                     class="w-full h-96 object-cover rounded">
+              </div>
+              
+              @if (vm.data.images?.length) {
+                <div class="grid grid-cols-4 gap-4">
+                  @for (image of vm.data.images; track image.id; let i = $index) {
+                    <img [src]="image.url"
+                         [alt]="vm.data.name"
+                         class="w-24 h-24 object-cover rounded cursor-pointer"
+                         [class.ring-2]="i === selectedImageIndex"
+                         [class.ring-blue-500]="i === selectedImageIndex"
+                         (click)="selectedImageIndex = i">
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Product Info -->
+            <div class="space-y-6">
+              <div class="bg-white p-6 rounded-lg shadow">
+                <h1 class="text-3xl font-bold mb-2">{{vm.data.name}}</h1>
+                <p class="text-sm text-gray-500 mb-2">SKU: {{vm.data.sku}}</p>
+                <p class="text-gray-600 mb-4">{{vm.data.description}}</p>
+                
+                <div class="flex items-center justify-between mb-6">
+                  <div>
+                    @if (vm.data.basePrice) {
+                      <p class="text-3xl font-bold text-blue-600">
+                        {{vm.data.basePrice}} FCFA
+                      </p>
+                      @if (vm.data.price !== vm.data.basePrice) {
+                        <p class="text-sm text-gray-500 line-through">
+                          {{vm.data.price}} FCFA
+                        </p>
+                      }
+                    } @else {
+                      <p class="text-3xl font-bold text-blue-600">
+                        {{vm.data.price}} FCFA
+                      </p>
+                    }
+                  </div>
+                  <div class="space-y-2">
+                    <mat-chip-set>
+                      <mat-chip [color]="vm.data.isActive ? 'primary' : 'warn'" selected>
+                        {{vm.data.isActive ? 'Active' : 'Inactive'}}
+                      </mat-chip>
+                    </mat-chip-set>
+                    <mat-chip-set>
+                      <mat-chip [color]="vm.data.inventory.quantity > 0 ? 'primary' : 'warn'" selected>
+                        {{vm.data.inventory.quantity > 0 ? vm.data.inventory.quantity + ' in stock' : 'Out of stock'}}
+                      </mat-chip>
+                    </mat-chip-set>
+                  </div>
+                </div>
+
+                <!-- Categories -->
+                @if (vm.data.categories) {
+                  <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Categories</h3>
+                    <mat-chip-set>
+                      @for (category of vm.data.categories; track category.id) {
+                        <mat-chip>{{category.name}}</mat-chip>
+                      }
+                    </mat-chip-set>
+                  </div>
+                }
+
+                <!-- Add to Cart -->
+                @if (1 || vm.data.isActive && vm.data.inventory.quantity > 0) {
+                  <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                      <mat-form-field class="w-24">
+                        <mat-label>Qty</mat-label>
+                        <input matInput 
+                               type="number" 
+                               [(ngModel)]="quantity" 
+                               min="1" 
+                               [max]="vm.data.inventory.quantity">
+                      </mat-form-field>
+                      <button mat-raised-button 
+                              color="primary" 
+                              [disabled]="quantity < 1 || quantity > vm.data.inventory.quantity"
+                              (click)="addToCart(vm.data)">
+                        <mat-icon class="mr-2">add_shopping_cart</mat-icon>
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                } @else {
+                  <p class="text-red-500">This product is currently unavailable</p>
+                }
+
+                <!-- Timestamps -->
+                <div class="mt-6 text-sm text-gray-500">
+                  <p>Added: {{vm.data.createdAt | date}}</p>
+                  <p>Last updated: {{vm.data.updatedAt | date}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    }
+  }
+</div>
