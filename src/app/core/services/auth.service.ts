@@ -29,15 +29,25 @@ export class AuthService {
   ) { 
     const token = localStorage.getItem('token');
     const storedPermissions = localStorage.getItem('permissions');
-    console.log(storedPermissions);
     const storedUser = localStorage.getItem('user');
 
-    this.isLoggedInSubject.next(!!token);
-    if (storedPermissions) {
-      this.userPermissions = JSON.parse(storedPermissions);
-    }
-    if (storedUser) {
-      this.userSubject.next(JSON.parse(storedUser));
+    if (token) {
+      this.getUser().subscribe({
+        next: (user) => {
+          this.isLoggedInSubject.next(true);
+          if (storedPermissions) {
+            this.userPermissions = JSON.parse(storedPermissions);
+          }
+          if (storedUser) {
+            this.userSubject.next(JSON.parse(storedUser));
+          }
+        },
+        error: () => {
+          this.logout();
+        }
+      });
+    } else {
+      this.isLoggedInSubject.next(false);
     }
   }
 
@@ -59,7 +69,6 @@ export class AuthService {
       map((response) => {
         this.userSubject.next(response.data);
         this.userPermissions = this.getUserPermissions(response.data);
-        console.dir(this.userPermissions, { depth: null })
         return response.data;
       })
     );
@@ -85,6 +94,18 @@ export class AuthService {
 
   resetPassword(token: string, password: string): Observable<ApiResponse<unknown>> {
     return this.http.put<ApiResponse<unknown>>(`${this.apiUrl}/auth/set-password/${token}`, { password });
+  }
+
+  requestPasswordReset(email: string): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  verify(token: string): Observable<ApiResponse<void>> {
+    return this.http.get<ApiResponse<void>>(`${this.apiUrl}/auth/verify/${token}`);
+  }
+  
+  resendVerification(token: string): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/auth/verify/resend`, { token });
   }
 
   private getUserPermissions(user: UserResponse): string[] {
@@ -129,10 +150,10 @@ export class AuthService {
   }
 
   private handleErrorResponse(error: any): Observable<never> {
-    console.error('Login failed:', error); // Log the error
-    this.isLoggedInSubject.next(false); // Update logged-in state
+    console.error('Login failed:', error); 
+    this.isLoggedInSubject.next(false);
 
-    this.showToast('Login failed', 'error'); // Show toast notification
+    this.showToast(error.message, 'error');
 
     return throwError(() => new Error('Login failed. Please try again!'));
   }
