@@ -1,137 +1,77 @@
-<!-- <header class="marketplace-hero">
-  <div class="hero-content">
-    <h1>Bienvenue sur JefJel</h1>
-    <p>Découvrez des produits uniques et faits à la main</p>
-    <div class="hero-cta">
-      <button mat-raised-button color="primary" routerLink="/products">
-        Voir les produits
-      </button>
-      <button mat-stroked-button color="accent">
-        En savoir plus
-      </button>
-    </div>
-  </div>
-</header> -->
-
-<!-- Catégories en vedette -->
-<!-- <section class="featured-categories">
-  <h2> Catégories en vedette </h2>
-  <div class="categories-grid">
-    @for (category of featuredCategories; track category.name) {
-      <mat-card class="category-card">
-        <mat-card-content>
-          <mat-icon>{{ category.icon }}</mat-icon>
-          <h3>{{ category.name }}</h3>
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
-</section> -->
-
-<!-- Produits en vedette -->
-<!-- <section class="featured-products">
-  <h2> Produits en vedette </h2>
-  <div class="products-grid">
-    @for (product of featuredProducts; track product.name) {
-      <mat-card class="product-card">
-        <img mat-card-image [src]="product.image" [alt]="product.name">
-        <mat-card-content>
-          <h3>{{ product.name }}</h3>
-          <p class="product-price">${{ product.price.toFixed(2) }}</p>
-          <div class="product-actions">
-            <button mat-mini-fab color="primary">
-              <mat-icon>add_shopping_cart</mat-icon>
-            </button>
-            <button mat-stroked-button color="accent">
-              View Details
-            </button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
-</section> -->
-
-<div class="marketplace-discovery-container">
-  <!-- Search and Filter Section -->
-  <div class="search-filter-section">
-    <mat-form-field appearance="fill" class="search-input">
-      <mat-label>Search Marketplaces</mat-label>
-      <input 
-        matInput 
-        [(ngModel)]="searchTerm" 
-        (ngModelChange)="filterMarketplaces()"
-        placeholder="Find markets, vendors, categories"
-      >
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-
-
-    <div class="filter-chips">
-      <mat-chip-listbox multiple>
-        @for (category of categories; track category) {
-          <mat-chip-option 
-            [selected]="selectedCategories[category]"
-            (selectionChange)="onCategoryChange($event, category)"
-          >
-            {{ category }}
-          </mat-chip-option>
-        }
-      </mat-chip-listbox>
-    </div>
-  </div>
-
-  <!-- Marketplaces Grid -->
-  <div class="marketplaces-grid">
-    <mat-card 
-      *ngFor="let marketplace of filteredMarketplaces" 
-      class="marketplace-card"
-      (click)="openMarketplace(marketplace)"
-    >
-      <div class="marketplace-card-content">
-        <div class="marketplace-banner">
-          <img 
-            [src]="marketplace.coverImage" 
-            alt="{{ marketplace.name }} Cover"
-            class="cover-image"
-          >
-          <img 
-            [src]="marketplace.logo" 
-            alt="{{ marketplace.name }} Logo"
-            class="logo-image"
-          >
-        </div>
-        
-        <div class="marketplace-details">
-          <h3>{{ marketplace.name }}</h3>
-          <p class="marketplace-description">
-            {{ marketplace.description }}
-          </p>
-          
-          <div class="marketplace-stats">
-            <div class="stat">
-              <mat-icon>storefront</mat-icon>
-              <span>{{ marketplace.productCount }} Products</span>
-            </div>
-            <div class="stat">
-              <mat-icon>star</mat-icon>
-              <span>{{ marketplace.rating.toFixed(1) }}</span>
-            </div>
-          </div>
-          
-          <mat-chip>{{ marketplace.category }}</mat-chip>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Hero Section -->
+  <section class="mb-12">
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg">
+      <div class="px-8 py-12 text-center text-white">
+        <h1 class="text-4xl font-bold mb-4">Welcome to Our Marketplace</h1>
+        <p class="text-xl mb-8">Discover thousands of unique products from verified sellers</p>
+        <div class="max-w-2xl mx-auto">
+          <mat-form-field class="w-full">
+            <mat-label>Search products, markets, or categories</mat-label>
+            <input matInput placeholder="What are you looking for?" class="w-full">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
         </div>
       </div>
-    </mat-card>
-  </div>
+    </div>
+  </section>
 
-  <!-- No Results -->
-  <div 
-    *ngIf="filteredMarketplaces.length === 0" 
-    class="no-results"
-  >
-    <mat-icon>store_off</mat-icon>
-    <h2>No Marketplaces Found</h2>
-    <p>Try adjusting your search or filters</p>
-  </div>
+  <!-- Categories Section -->
+  <!-- <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-6">Browse Categories</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div *ngFor="let category of categories" 
+           class="bg-white rounded-lg shadow-md p-6 text-center cursor-pointer transform transition-transform hover:-translate-y-1">
+        <mat-icon class="text-4xl text-blue-600 mb-4">{{category.icon}}</mat-icon>
+        <h3 class="text-lg font-semibold mb-2">{{category.name}}</h3>
+        <p class="text-gray-600">{{category.count.toLocaleString()}} items</p>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- Featured Markets Section -->
+  <section class="mb-12">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold">Featured Markets</h2>
+      <button mat-button color="primary" (click)="viewAllMarkets()" 
+              class="text-blue-600 hover:text-blue-800">View All</button>
+    </div>
+    @if (markets$ | async; as vm) {
+      @switch(vm.status) {
+        @case('loading') {
+          <div class="flex justify-center items-center p-8">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        } @case ('error') {
+          <div class="text-center p-8">
+            <mat-icon class="text-6xl text-red-500">error_outline</mat-icon>
+            <p class="mt-2 text-gray-600">{{vm.error}}</p>
+            <button mat-raised-button color="primary" class="mt-4" (click)="loadFeaturedMarkets()">
+              Retry
+            </button>
+          </div>
+        } @case ('success') {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            @for (market of vm.data; track market.id) {
+              <div (click)="navigateToMarket(market.id)"
+                   class="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform transition-transform hover:-translate-y-1">
+                <img [src]="market.coverImage" [alt]="market.name" 
+                     class="w-full h-48 object-cover">
+                <div class="p-4">
+                  <h3 class="text-xl font-semibold mb-2">{{market.name}}</h3>
+                  <p class="text-gray-600 mb-2 line-clamp-2 h-12">{{market.description}}</p>
+                  <p class="text-gray-600 mb-2">{{market.productCount.toLocaleString()}} products</p>
+                  <div class="flex items-center text-yellow-400">
+                    <mat-icon class="mr-1">star</mat-icon>
+                    <span>{{market.rating}}</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    }
+  </section>
+
 </div>

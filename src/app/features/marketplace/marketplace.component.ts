@@ -1,94 +1,110 @@
 import { MaterialModule } from '#shared/material/material.module';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MatChipSelectionChange } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastService } from '#shared/services/toast.service';
+import { MarketService } from './services/market.service'
+import { ProductResponse } from '#types/product'
+import { DataState } from '#types/data_state';
+import {
+  Market
+} from '#types/marketplace';
 
-
-interface Marketplace {
-  id: string;
-  name: string;
-  description: string;
-  logo: string;
-  coverImage: string;
-  category: string;
-  productCount: number;
-  rating: number;
-}
 
 
 @Component({
   selector: 'app-marketplace',
-  imports: [MaterialModule, CommonModule, FormsModule],
+  imports: [ 
+    MaterialModule, 
+    CommonModule, 
+    FormsModule,
+    RouterModule
+  ],
   templateUrl: './marketplace.component.html',
   styleUrl: './marketplace.component.sass'
 })
 export class MarketplaceComponent implements OnInit {
-  marketplaces: Marketplace[] = [
-    {
-      id: '1',
-      name: 'Organic Farmers Market',
-      description: 'Fresh, locally sourced organic produce and artisan products',
-      logo: '/assets/market1-logo.jpg',
-      coverImage: '/assets/market1-cover.jpg',
-      category: 'Food & Groceries',
-      productCount: 128,
-      rating: 4.7
-    },
-    {
-      id: '2', 
-      name: 'Tech Gadgets Hub',
-      description: 'Latest electronics, gadgets, and innovative tech products',
-      logo: '/assets/market2-logo.jpg',
-      coverImage: '/assets/market2-cover.jpg',
-      category: 'Electronics',
-      productCount: 245,
-      rating: 4.5
-    },
-    // Add more marketplaces
-  ];
+  private marketsSubject = new BehaviorSubject<DataState<Market[]>>({
+    status: 'loading',
+    error: null
+  });
+  markets$ = this.marketsSubject.asObservable();
 
-  filteredMarketplaces: Marketplace[] = [];
+  private productsSubject = new BehaviorSubject<DataState<ProductResponse[]>>({
+    status: 'loading',
+    error: null
+  });
+  products$ = this.productsSubject.asObservable();
+
+
+  filteredMarketplaces: Market[] = [];
+  selectedCategory = '';
   searchTerm: string = '';
-  categories: string[] = ['Food & Groceries', 'Electronics', 'Fashion', 'Home & Garden'];
   selectedCategories: { [key: string]: boolean } = {};
 
-  ngOnInit() {
-    this.filteredMarketplaces = this.marketplaces;
-    this.categories.forEach(category => {
-      this.selectedCategories[category] = false;
+
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private marketService: MarketService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadFeaturedMarkets();
+    // this.loadFeaturedProducts();
+  }
+
+  navigateToMarket(marketId: number): void {
+    this.router.navigate(['/markets', marketId]);
+  }
+
+  navigateToProduct(marketId: number, productId: number): void {
+    this.router.navigate(['/markets', marketId, 'products', productId]);
+  }
+
+  viewAllMarkets() {}
+
+  loadFeaturedMarkets(): void {
+    this.marketService.getFeaturedMarkets().subscribe({
+      next: (markets) => {
+        this.marketsSubject.next({
+          status: 'success',
+          data: markets,
+          error: null
+        });
+      },
+      error: (error) => {
+        this.marketsSubject.next({
+          status: 'error',
+          data: [],
+          error: 'Failed to load markets'
+        });
+      }
     });
   }
 
-  filterMarketplaces() {
-    this.filteredMarketplaces = this.marketplaces.filter(marketplace => {
-      const matchesSearch = !this.searchTerm || 
-        marketplace.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        marketplace.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        marketplace.category.toLowerCase().includes(this.searchTerm.toLowerCase());
-
-      const matchesCategories = Object.keys(this.selectedCategories)
-        .filter(category => this.selectedCategories[category])
-        .length === 0 || 
-        this.selectedCategories[marketplace.category];
-
-      return matchesSearch && matchesCategories;
+private loadFeaturedProducts(): void {
+    this.marketService.getFeaturedProducts().subscribe({
+      next: (products: ProductResponse[]) => {
+        this.productsSubject.next({
+          status: 'success',
+          data: products,
+          error : null
+        });
+      },
+      error: (error) => {
+        this.productsSubject.next({
+          status: 'error',
+          data: [],
+          error: 'Failed to load products'
+        });
+      }
     });
   }
 
-  applyFilters() {
-    this.filterMarketplaces();
-  }
 
-  openMarketplace(marketplace: Marketplace) {
-    // TODO: Implement tenant-specific routing
-    // This could be a subdomain or a specific route
-    // Example: window.location.href = `https://${marketplace.id}.app.com`
-    console.log(`Opening marketplace: ${marketplace.name}`);
-  }
-
-  onCategoryChange(event: MatChipSelectionChange, category: string) {
-    this.selectedCategories[category] = event.selected;
-    this.filterMarketplaces();
-  }
 }

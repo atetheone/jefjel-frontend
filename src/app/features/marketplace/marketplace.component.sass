@@ -76,3 +76,45 @@
   text-align: center
   padding: 50px
   color: #888
+
+// marketplace.component.sass
+.hero-section
+  position: relative
+  overflow: hidden
+  
+  &::before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: url('/assets/hero-pattern.svg')
+    opacity: 0.1
+
+.search-section
+  transform: translateY(20px)
+
+.category-card
+  mat-icon
+    color: var(--primary-color)
+    transform: scale(1.5)
+
+.market-card, .product-card
+  overflow: hidden
+  img
+    transition: transform 0.3s
+    &:hover
+      transform: scale(1.05)
+
+.featured-section-header
+  position: relative
+  &::after
+    content: ''
+    position: absolute
+    bottom: -8px
+    left: 0
+    width: 60px
+    height: 3px
+    background: var(--primary-color)
+
