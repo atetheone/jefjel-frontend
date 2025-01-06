@@ -1,18 +1,18 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { Observable } from 'rxjs';
 import { MaterialModule } from '#shared/material/material.module';
 import { AuthService } from '#services/auth.service'
-
-
+import { CartService } from '#shared/services/cart.service'
 @Component({
   selector: 'app-navbar',
-  imports: [MaterialModule, RouterModule],
+  imports: [MaterialModule, RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.sass',
 })
 export class NavbarComponent implements OnInit {
-  cartItemCount = signal(3);
-  isLoggedIn: boolean = false;
+  cartItemCount$!: Observable<number>;
   isUserMenuOpen = false;
   isCategoryMenuOpen = false;
   isAuthenticated = false;
@@ -33,8 +33,14 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private cartService: CartService
+  ) {
+    this.cartItemCount$ = this.cartService.getCartItemCount();
+    // this.cartService.getCartItemCount().subscribe({
+    //   next: cnt => this.cartItemCount = cnt
+    // })
+  }
   
 
   ngOnInit(): void {
