@@ -12,8 +12,8 @@
         <p class="text-gray-600">SKU: {{ product.sku }}</p>
       </div>
       <mat-chip-set>
-        <mat-chip [color]="product.stock > 0 ? 'primary' : 'warn'" selected>
-          {{ product.stock }} in stock
+        <mat-chip [color]="product.inventory.quantity > 0 ? 'primary' : 'warn'" selected>
+          {{ product.inventory.quantity }} in stock
         </mat-chip>
       </mat-chip-set>
     </div>

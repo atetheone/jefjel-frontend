@@ -6,6 +6,7 @@ import { ProductService } from '#shared/services/product.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProductResponse } from '#types/product';
+import { InventoryResponse } from '#types/inventory';
 import { catchError, BehaviorSubject, map, of } from 'rxjs';
 import { DataState } from '#types/data_state';
 
@@ -63,5 +64,18 @@ export class ProductDetailsComponent implements OnInit {
 
   editProduct(id: number) {
     this.router.navigate(['/admin/products/edit', id]);
+  }
+
+  getStockStatus(inventory: InventoryResponse): string {
+    if (!inventory) return 'No inventory';
+    if (inventory.quantity <= 0) return 'Out of Stock';
+    if (inventory.quantity <= inventory.lowStockThreshold) return 'Low Stock';
+    return 'In Stock';
+  }
+
+  getStockColor(inventory: InventoryResponse): string {
+    if (!inventory || inventory.quantity <= 0) return 'warn';
+    if (inventory.quantity <= inventory.lowStockThreshold) return 'accent';
+    return 'primary';
   }
 }
