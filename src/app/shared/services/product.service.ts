@@ -10,6 +10,7 @@ import {
   UpdateProduct,
   CategoryResponse
 } from '#types/product';
+import { InventorySettings, InventoryResponse, UpdateInventoryDto } from '#types/inventory';
 import { ApiResponse } from '#types/api_response';
 
 @Injectable({
@@ -68,6 +69,20 @@ export class ProductService {
     return this.http.put<ApiResponse<ProductResponse>>(
       `${this.productApi}/${productId}/categories`,
       { categoryIds }
+    );
+  }
+
+  updateInventory(productId: number, data: UpdateInventoryDto): Observable<ApiResponse<ProductResponse>> {
+    return this.http.patch<ApiResponse<ProductResponse>>(
+      `${this.productApi}/${productId}/inventory/stock`,
+      data
+    );
+  }
+
+  updateInventorySettings(productId: number, settings: InventorySettings): Observable<ApiResponse<ProductResponse>> {
+    return this.http.patch<ApiResponse<ProductResponse>>(
+      `${this.productApi}/${productId}/inventory/settings`,
+      settings
     );
   }
 }
