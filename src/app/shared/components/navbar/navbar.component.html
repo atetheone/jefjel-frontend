@@ -47,10 +47,10 @@
     <!-- Right Section -->
     <div class="flex items-center space-x-6">
       <!-- Cart -->
-      <a routerLink="/cart" 
-         class="text-gray-700 hover:text-blue-600 relative">
-        <mat-icon [matBadge]="cartItemCount()"
-                  [matBadgeHidden]="cartItemCount() === 0"
+      <a (click)="navigateToCart()" 
+          class="text-gray-700 hover:text-blue-600 relative cursor-pointer">
+        <mat-icon [matBadge]="cartItemCount$ | async"
+                  [matBadgeHidden]="(cartItemCount$ | async) === 0"
                   matBadgeColor="warn"
                   class="text-2xl">
           shopping_cart
