@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '#shared/material/material.module';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { MarketService } from '../services/market.service';
-import { CartService } from '#features/cart/services/cart.service';
+import { CartService } from '#shared/services/cart.service';
 import { ToastService } from '#shared/services/toast.service';
 import { Market } from '#types/marketplace';
 import { ProductResponse } from '#types/product';
@@ -67,17 +67,21 @@ export class MarketDetailsComponent implements OnInit {
     });
   }
 
-  addToCart(product: ProductResponse): void {
-    // this.cartService.addToCart({
-    //   productId: product.id,
-    //   name: product.name,
-    //   price: product.basePrice || product.price,
-    //   quantity: 1,
-    //   image: product.images?.[0]?.url || 'assets/images/placeholder.jpg',
-    //   marketId: product.tenantId,
-    //   marketName: this.marketSubject.value.data?.name || ''
-    // });
-    this.toastService.success('Added to cart');
+  addToCart(event: { product: ProductResponse, quantity: number }): void {
+    this.cartService.addToCart({
+      productId: event.product.id,
+      quantity: event.quantity
+    }).subscribe({
+      next: (cart) => {
+        this.toastService.success('Added to cart');
+      },
+      error: (error) => {
+        this.toastService.error('Failed to add to cart');
+        console.error('Add to cart error:', error);
+      }
+    })
+  
+    
   }
 
   private loadMarketProducts(marketId: number, page: number = 1) {
