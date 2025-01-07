@@ -1,4 +1,5 @@
 import { ApiResponse } from './api_response';
+import { InventoryResponse } from './inventory'
 
 interface BaseProduct {
   name: string
@@ -6,7 +7,6 @@ interface BaseProduct {
   price: string
   basePrice?: string
   sku: string
-  stock: number
   isActive: boolean
   tenantId: number
 }
@@ -40,6 +40,7 @@ export interface ProductResponse extends BaseProduct {
   coverImage?: ProductImageResponse
   images?: ProductImageResponse[]
   categories: CategoryResponse[]
+  inventory: InventoryResponse
   createdAt: string
   updatedAt: string
 }
