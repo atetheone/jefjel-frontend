@@ -1,0 +1,60 @@
+<mat-card class="p-4 mb-4">
+  <div class="flex items-center gap-6">
+    <!-- Product Image -->
+    <img [src]="item.product.images?.[0]?.url || 'assets/placeholder.jpg'" 
+         [alt]="item.product.name"
+         class="w-20 h-20 object-cover rounded">
+    
+    <div class="flex flex-start flex-col space-y-2 flex-grow">
+      <!-- Product Name -->
+      <h3 class="text-lg font-semibold flex-1">{{item.product.name}}</h3>
+
+      <!-- Price -->
+      <p class="font-medium w-24 text-center">
+        {{item.product.basePrice || item.product.price}} FCFA
+      </p>
+
+      <!-- Quantity Controls -->
+      <div class="flex items-center gap-1 w-32 justify-center">
+        <button mat-icon-button 
+                color="primary"
+                [disabled]="item.quantity <= 1"
+                (click)="updateQuantity(item.quantity - 1)">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <input 
+              type="number" 
+              matInput
+              [min]="1"
+              [max]="item.product.inventory.quantity"
+              [(ngModel)]="item.quantity"
+              value="1"
+              (change)="updateQuantity(item.quantity)"
+              class="h-7 text-center font-medium"
+        >
+
+        <!-- <span class="w-8 text-center font-medium">{{item.quantity}}</span> -->
+        
+        <button mat-icon-button 
+                color="primary"
+                [disabled]="item.quantity >= item.product.inventory.quantity"
+                (click)="updateQuantity(item.quantity + 1)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+
+    </div>
+    <!-- Subtotal -->
+    <p class="font-medium w-32 text-right">
+      {{ getSubTotal() }} FCFA
+    </p>
+
+    <!-- Delete Button -->
+    <button mat-icon-button 
+            color="warn" 
+            (click)="remove.emit()"
+            matTooltip="Remove item">
+      <mat-icon>delete</mat-icon>
+    </button> 
+  </div>
+</mat-card>
