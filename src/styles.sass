@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css'
+
+// Tailwind CSS 
+@tailwind base
+@tailwind components
+@tailwind utilities
+// @import '@angular/material/prebuilt-themes/'
+
+  
+.spacer
+  flex: 1 1 auto
+  
+  
+// Success Toast
+.custom-toast
+  margin-top: 60px !important
+
+.success-toast
+  .mdc-snackbar__surface
+    background-color: #4caf50 !important
+  .mat-mdc-snack-bar-label, .mat-mdc-snack-bar-actions
+    color: white !important
+
+.error-toast
+  .mdc-snackbar__surface
+    background-color: #f44336 !important
+  .mat-mdc-snack-bar-label, .mat-mdc-snack-bar-actions
+    color: white !important
+
+.mat-mdc-snack-bar-container
+  &.custom-toast
+    --mdc-snackbar-container-color: transparent
+    --mat-mdc-snack-bar-button-color: #fff
+
+/* Common Snackbar Styling */
+.mat-snack-bar-container
+  border-radius: 4px !important
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2) !important
