@@ -1,0 +1,111 @@
+<div class="max-w-4xl mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-6">Checkout</h1>
+
+  @if (cart$ | async; as cart) {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Order Summary -->
+      <div class="md:col-span-1">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Order Summary</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="p-4">
+            @for (item of cart.items; track item.id) {
+              <div class="flex justify-between mb-2">
+                <span>{{item.product.name}} x {{item.quantity}}</span>
+                <span>{{+item.product.basePrice! * item.quantity}} FCFA</span>
+              </div>
+            }
+            <mat-divider class="my-4"></mat-divider>
+            <div class="flex justify-between font-bold">
+              <span>Total</span>
+              <span>{{getTotal(cart)}} FCFA</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Checkout Form -->
+      <div class="md:col-span-2">
+        <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+          <!-- Shipping Address -->
+          <mat-card class="mb-4">
+            <mat-card-header>
+              <mat-card-title>Shipping Address</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="p-4" formGroupName="shippingAddress">
+              <div class="grid grid-cols-2 gap-4">
+                <mat-form-field>
+                  <mat-label>Street</mat-label>
+                  <input matInput formControlName="street">
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>City</mat-label>
+                  <input matInput formControlName="city">
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>State</mat-label>
+                  <input matInput formControlName="state">
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>ZIP Code</mat-label>
+                  <input matInput formControlName="zipCode">
+                </mat-form-field>
+
+                <mat-form-field class="col-span-2">
+                  <mat-label>Country</mat-label>
+                  <input matInput formControlName="country">
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Payment Method -->
+          <mat-card class="mb-4">
+            <mat-card-header>
+              <mat-card-title>Payment Method</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="p-4">
+              <mat-radio-group formControlName="paymentMethod">
+                <mat-radio-button value="cash" class="block mb-2">
+                  Cash on Delivery
+                </mat-radio-button>
+                <mat-radio-button value="card" class="block mb-2">
+                  Credit/Debit Card
+                </mat-radio-button>
+              </mat-radio-group>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Submit Button -->
+          <button mat-raised-button 
+                  color="primary" 
+                  class="w-full" 
+                  type="submit"
+                  [disabled]="checkoutForm.invalid || isProcessing">
+            @if (isProcessing) {
+              <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+              Processing...
+            } @else {
+              Place Order
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+  } @else {
+    <div class="text-center py-12">
+      <mat-icon class="text-6xl text-gray-400">shopping_cart</mat-icon>
+      <p class="mt-4 text-gray-600">No items in cart</p>
+      <button mat-raised-button 
+              color="primary" 
+              routerLink="/marketplace" 
+              class="mt-4">
+        Continue Shopping
+      </button>
+    </div>
+  }
+</div>
