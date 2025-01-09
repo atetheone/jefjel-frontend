@@ -29,6 +29,7 @@
       "#utils/*": ["app/core/utils/*"],
       "#components/*": ["app/shared/components/*"],
       "#layouts/*": ["app/layouts/*"],
+      "#guards/*": ["app/core/guards/*"]
     },
   },
   "angularCompilerOptions": {
