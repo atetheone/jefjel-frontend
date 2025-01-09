@@ -3,6 +3,8 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from '#features/auth/login/login.component';
 import { RegisterComponent } from '#features/auth/register/register.component';
 import { SetPasswordComponent } from '#features/auth/set-password/set-password.component';
+import { PasswordForgottenComponent } from '#features/auth/password-forgotten/password-forgotten.component';
+import { VerifyAccountComponent } from '#features/auth/verify-account/verify-account.component';
 import { DashboardComponent } from '#features/dashboard/dashboard.component';
 import { DefaultLayoutComponent } from '#layouts/default-layout/default-layout.component';
 import { AdminLayoutComponent } from '#layouts/admin-layout/admin-layout.component';
@@ -17,10 +19,15 @@ import { RolesComponent } from '#features/roles/roles.component';
 import { CreateRoleComponent } from '#features/roles/create-role/create-role.component'
 import { RoleDetailsComponent } from '#features/roles/role-details/role-details.component'
 import { ProfileComponent } from '#features/profile/profile.component';
+import { CartOverviewComponent } from '#features/cart/cart-overview/cart-overview.component';
+import { CheckoutComponent } from '#features/checkout/checkout.component';
 
 import { USER_ROUTES } from '#features/users/users.routes';
 import { ROLES_ROUTES } from '#features/roles/roles.routes';
 import { TENANTS_ROUTES } from '#features/tenants/tenants.routes';
+import { PRODUCTS_ROUTES } from '#features/products/products.routes';
+import { MARKETPLACE_ROUTES } from '#features/marketplace/marketplace.routes';
+
 
 
 import { authGuard } from '#guards/auth.guard';
@@ -32,9 +39,29 @@ export const routes: Routes = [
     path: '',
     component: DefaultLayoutComponent, 
     children: [
-      { path: '', component: MarketplaceComponent }, 
+      { 
+        path: '', 
+        component: MarketplaceComponent
+      },
+      {
+        path: 'markets', 
+        children: MARKETPLACE_ROUTES
+      }, 
+      {
+        path: 'cart',
+        component: CartOverviewComponent,
+        data: { breadcrumb: 'Shopping Cart' }
+      },
+      {
+        path: 'checkout',
+        component: CheckoutComponent,
+        data: { breadcrumb: 'Checkout' }
+      },
       { path: 'login', component: LoginComponent }, 
       { path: 'register', component: RegisterComponent },
+      { path: 'reset', component: PasswordForgottenComponent },
+      { path: 'verify/:token', component: VerifyAccountComponent },
+
     ]
   },
   {
@@ -53,6 +80,7 @@ export const routes: Routes = [
         children: USER_ROUTES,
       },
       { path: 'roles', children: ROLES_ROUTES },
+      { path: 'products', children: PRODUCTS_ROUTES },
       {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component')
