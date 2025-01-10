@@ -53,20 +53,20 @@
                 
                 <div class="flex items-center justify-between mb-6">
                   <div>
-                    @if (vm.data.basePrice) {
+                    <!-- @if (vm.data.basePrice) { -->
                       <p class="text-3xl font-bold text-blue-600">
-                        {{vm.data.basePrice}} FCFA
+                        {{vm.data.price }} FCFA
                       </p>
-                      @if (vm.data.price !== vm.data.basePrice) {
+                      <!-- @if (vm.data.price !== vm.data.basePrice) {
                         <p class="text-sm text-gray-500 line-through">
                           {{vm.data.price}} FCFA
-                        </p>
-                      }
-                    } @else {
+                        </p> -->
+                      <!-- } -->
+                    <!-- } @else {
                       <p class="text-3xl font-bold text-blue-600">
                         {{vm.data.price}} FCFA
-                      </p>
-                    }
+                      </p> -->
+                    <!-- } -->
                   </div>
                   <div class="space-y-2">
                     <mat-chip-set>
