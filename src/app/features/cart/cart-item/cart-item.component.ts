@@ -22,6 +22,6 @@ export class CartItemComponent {
   }
 
   getSubTotal() {
-    return (+(this.item.product.basePrice || this.item.product.price)  * this.item.quantity)
+    return this.item.product.price  * this.item.quantity
   }
 }
