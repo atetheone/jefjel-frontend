@@ -57,9 +57,18 @@ export class CartOverviewComponent {
   }
 
   getSubtotal(cart: CartResponse): number {
-    return cart?.items.reduce((total:number, item: CartItem) => 
-      total + (Number(item.product.basePrice) * item.quantity), 0) || 0;
-  }
+    if (!cart?.items?.length) {
+      return 0;
+    }
+    
+    const total = cart.items.reduce((total: number, item: CartItem) => {
+      const price = Number(item.product.price);
+      const quantity = Number(item.quantity);
+      return total + (price * quantity);
+    }, 0);
+
+    return Number(total.toFixed(2));
+  }  
 
   getTotal(cart: CartResponse): number {
     return this.getSubtotal(cart);
