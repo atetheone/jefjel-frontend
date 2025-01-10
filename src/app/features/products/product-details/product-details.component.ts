@@ -63,7 +63,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   editProduct(id: number) {
-    this.router.navigate(['/admin/products/edit', id]);
+    this.router.navigate(['/dashboard/products/edit', id]);
   }
 
   getStockStatus(inventory: InventoryResponse): string {
