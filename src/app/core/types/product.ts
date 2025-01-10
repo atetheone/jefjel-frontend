@@ -4,8 +4,7 @@ import { InventoryResponse } from './inventory'
 interface BaseProduct {
   name: string
   description: string
-  price: string
-  basePrice?: string
+  price: number
   sku: string
   isActive: boolean
   tenantId: number
