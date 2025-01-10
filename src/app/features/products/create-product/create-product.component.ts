@@ -60,7 +60,6 @@ export class CreateProductComponent implements OnInit {
       description: ['', Validators.required],
       sku: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
-      basePrice: [''],
       isActive: [true],
       categoryIds: [[]],
       inventory: this.fb.group({
@@ -113,7 +112,6 @@ export class CreateProductComponent implements OnInit {
           description: product.description,
           sku: product.sku,
           price: product.price,
-          basePrice: product.basePrice,
           isActive: product.isActive,
           categoryIds: product.categories.map(c => c.id),
           inventory: {
