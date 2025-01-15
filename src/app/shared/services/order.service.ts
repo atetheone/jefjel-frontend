@@ -3,14 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '#env/environment';
 import { ApiResponse } from '#types/api_response';
-import { AddressResponse } from '#types/address'; // AddressService
 import { OrderResponse, CreateOrderRequest } from '#types/order';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CheckoutService {
+export class OrderService {
   private baseUrl = `${environment.apiUrl}/orders`;
 
   constructor(private http: HttpClient) {}
@@ -20,13 +19,19 @@ export class CheckoutService {
       .pipe(map(response => response.data));
   }
 
-  loadUserAddresses(): Observable<any[]> {
-    return this.http.get<ApiResponse<any[]>>(`${environment.apiUrl}/addresses`)
+  getUserOrders(): Observable<OrderResponse[]> {
+
+    return this.http.get<ApiResponse<OrderResponse[]>>(`${this.baseUrl}`)
+      .pipe(map((response: ApiResponse<OrderResponse[]>) => response.data));
+  }
+
+  getOrder(id: number): Observable<OrderResponse> {
+    return this.http.get<ApiResponse<OrderResponse>>(`${this.baseUrl}/${id}`)
       .pipe(map(response => response.data));
   }
 
-  getDefaultShippingAddress(): Observable<AddressResponse> {
-    return this.http.get<ApiResponse<AddressResponse>>(`${environment.apiUrl}/addresses/default/shipping`)
+  updateOrderStatus(orderId: number, status: string) {
+    return this.http.patch<ApiResponse<OrderResponse>>(`${this.baseUrl}/${orderId}/status`, { status })
       .pipe(map(response => response.data));
   }
 }
