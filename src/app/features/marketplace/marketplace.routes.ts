@@ -15,6 +15,7 @@ export const MARKETPLACE_ROUTES: Routes = [
       {
         path: ':id',
         component: MarketDetailsComponent,
+        data: { breadcrumb: 'Market details' },
         children: [
           // { path: '', redirectTo: 'products', pathMatch: 'full' },
           // { path: 'products', component: ProductListComponent },
