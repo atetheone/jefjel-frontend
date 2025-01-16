@@ -23,6 +23,13 @@
               </mat-error>
             }
           </mat-form-field>
+          <div class="flex justify-end mt-1">
+            <a mat-button 
+               routerLink="/password-reset" 
+               class="text-sm text-primary-600 hover:text-primary-700">
+              Forgot Password?
+            </a>
+          </div>
 
           <button mat-raised-button color="primary" type="submit" 
                   [disabled]="loginForm.invalid"
