@@ -29,14 +29,14 @@
             <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
             <div class="space-y-2">
               <div class="flex justify-between">
-                <span>Total</span>
+                <span>Subtotal</span>
                 <span>{{getTotal(cart)}} FCFA</span>
               </div>
             </div>
             <button mat-raised-button 
                     color="primary" 
                     class="w-full mt-4"
-                    routerLink="/checkout">
+                    (click)="proceedToCheckout()">
               Proceed to Checkout
             </button>
           </mat-card>

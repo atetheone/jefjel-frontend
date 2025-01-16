@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { MaterialModule } from '#shared/material/material.module';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CartService } from '#shared/services/cart.service';
+import { AuthService } from '#services/auth.service';
 import { CartItemComponent } from '../cart-item/cart-item.component';
 import { CartResponse, CartItem } from '#types/cart';
 import { ToastService } from '#shared/services/toast.service';
@@ -19,7 +20,9 @@ export class CartOverviewComponent {
 
   constructor(
     private cartService: CartService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService,
+    private router: Router
   ) {
     this.cart$ = this.cartService.cart$
   }
@@ -74,4 +77,13 @@ export class CartOverviewComponent {
     return this.getSubtotal(cart);
   }
 
+  proceedToCheckout() {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: '/checkout' }
+      });
+      return;
+    }
+    this.router.navigate(['/checkout']);
+  }
 }
