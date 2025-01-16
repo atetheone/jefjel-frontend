@@ -69,7 +69,7 @@ export class MarketDetailsComponent implements OnInit {
 
   addToCart(event: { product: ProductResponse, quantity: number }): void {
     this.cartService.addToCart({
-      productId: event.product.id,
+      product: event.product,
       quantity: event.quantity
     }).subscribe({
       next: (cart) => {
