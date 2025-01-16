@@ -32,16 +32,15 @@ export class AuthService {
     const storedUser = localStorage.getItem('user');
 
     if (token) {
+      this.isLoggedInSubject.next(true);
+
+      if (storedPermissions) {
+        this.userPermissions = JSON.parse(storedPermissions);
+      }
+      if (storedUser) {
+        this.userSubject.next(JSON.parse(storedUser));
+      }
       this.getUser().subscribe({
-        next: (user) => {
-          this.isLoggedInSubject.next(true);
-          if (storedPermissions) {
-            this.userPermissions = JSON.parse(storedPermissions);
-          }
-          if (storedUser) {
-            this.userSubject.next(JSON.parse(storedUser));
-          }
-        },
         error: () => {
           this.logout();
         }
@@ -96,8 +95,19 @@ export class AuthService {
     return this.http.put<ApiResponse<unknown>>(`${this.apiUrl}/auth/set-password/${token}`, { password });
   }
 
+  // requestPasswordReset(email: string): Observable<ApiResponse<void>> {
+  //   return this.http.post<ApiResponse<void>>(`${this.apiUrl}/auth/forgot-password`, { email });
+  // }
   requestPasswordReset(email: string): Observable<ApiResponse<void>> {
-    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/auth/forgot-password`, { email });
+    return this.http.post<ApiResponse<void>>(
+      `${this.apiUrl}/auth/forgot-password`, 
+      { email }
+    ).pipe(
+      catchError(error => {
+        this.showToast(error.message || 'Failed to send reset email', 'error');
+        return throwError(() => error);
+      })
+    );
   }
 
   verify(token: string): Observable<ApiResponse<void>> {
