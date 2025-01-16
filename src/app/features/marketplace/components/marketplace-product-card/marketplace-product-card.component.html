@@ -20,22 +20,13 @@
             [routerLink]="['/markets', product.tenantId, 'products', product.id]">
       View Details
     </button>
-    <div class="flex items-center gap-2">
-      <mat-form-field class="w-16">
-        <input matInput 
-               type="number" 
-               [(ngModel)]="quantity" 
-               min="1" 
-               [max]="product.inventory.quantity"
-               value="1"
-               [disabled]="isOutOfStock()">
-      </mat-form-field>
-      <button mat-raised-button 
-              color="primary"
-              [disabled]="isOutOfStock() || quantity < 1 || quantity > product.inventory.quantity"
-              (click)="onAddToCart()">
-        <mat-icon>add_shopping_cart</mat-icon>
-      </button>
-    </div>
+    
+    <button mat-raised-button 
+            color="primary"
+            [disabled]="isOutOfStock() || quantity < 1 || quantity > product.inventory.quantity"
+            (click)="onAddToCart()">
+            Add to cart
+      <mat-icon>add_shopping_cart</mat-icon>
+    </button>
   </mat-card-actions>
 </mat-card>
