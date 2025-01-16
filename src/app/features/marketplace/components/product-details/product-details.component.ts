@@ -71,7 +71,7 @@ export class MarketplaceProductDetailsComponent implements OnInit {
   addToCart(product: ProductResponse) {
     const cartId = this.cartService.getActiveCartId();
     this.cartService.addToCart({
-      productId: product.id,
+      product: product,
       quantity: this.quantity
     }).subscribe({
       next: (cart) => {
