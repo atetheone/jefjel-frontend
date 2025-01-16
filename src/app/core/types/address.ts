@@ -1,3 +1,5 @@
+import { DeliveryZoneResponse } from "./zone";
+
 export interface Address {
   id: number;
   type: 'shipping' | 'billing';
@@ -12,6 +14,7 @@ export interface Address {
   tenantId: number;
   createdAt: string;
   updatedAt: string;
+  zone: DeliveryZoneResponse;
 }
 
 export interface AddressRequest {
