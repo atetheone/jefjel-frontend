@@ -1,5 +1,9 @@
 import { ProductResponse } from './product'
 
+export interface Cart {
+  items: CartItem[];
+}
+
 export interface CartResponse {
   id: number;
   userId: number;
@@ -19,6 +23,6 @@ export interface CartItem {
 }
 
 export interface AddItemRequest {
-  productId: number;
+  product: ProductResponse;
   quantity: number;
 }
