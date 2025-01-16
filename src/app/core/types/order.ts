@@ -12,6 +12,7 @@ export interface Order {
   paymentId?: number;
   paymentMethod: string;
   total: number;
+  subtotal: number;
   createdAt: string;
   updatedAt: string;
   user?: UserResponse;
@@ -30,4 +31,4 @@ export interface CreateOrderRequest {
   paymentMethod: string;
 }
 
-export type OrderResponse = ApiResponse<Order>;
+export type OrderResponse = Order;
