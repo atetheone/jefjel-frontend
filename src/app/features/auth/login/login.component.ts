@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '#shared/material/material.module'
 import { AuthService } from '#core/services/auth.service';
 
@@ -17,17 +17,20 @@ import { AuthService } from '#core/services/auth.service';
   styleUrl: './login.component.sass'
 })
 export class LoginComponent {
+  returnUrl: string = '/';
   loginForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 
   onSubmit(): void {
@@ -38,7 +41,7 @@ export class LoginComponent {
       this.authService.login({ email, password }).subscribe({
         next: (response) => {
           console.log('Login response:', response);
-          this.router.navigate(['/dashboard']);
+          this.router.navigateByUrl(this.returnUrl);
         },
         error: (error: any) => {
           console.error('Login error:', error);
