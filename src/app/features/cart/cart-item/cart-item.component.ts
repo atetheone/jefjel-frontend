@@ -24,4 +24,8 @@ export class CartItemComponent {
   getSubTotal() {
     return this.item.product.price  * this.item.quantity
   }
+
+  getTotal() {
+    return this.getSubTotal();
+  }
 }
