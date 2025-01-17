@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
 
   userMenuItems = [
     { icon: 'person', label: 'My Profile', path: '/profile' },
-    { icon: 'shopping_bag', label: 'My Orders', path: '/orders' },
+    { icon: 'shopping_bag', label: 'My Orders', path: '/dashboard/orders' },
     { icon: 'dashboard', label: 'Dashboard', path: '/dashboard' },
     { icon: 'favorite', label: 'Wishlist', path: '/wishlist' },
     { icon: 'settings', label: 'Settings', path: '/settings' }
