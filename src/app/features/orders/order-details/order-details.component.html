@@ -1,0 +1,111 @@
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  @if (order$ | async; as order) {
+    <div class="bg-white rounded-lg shadow">
+      <!-- Header -->
+      <div class="p-6 border-b">
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl font-bold">Order #{{order.id}}</h1>
+          <mat-chip [color]="getStatusColor(order.status)" selected>
+            {{order.status}}
+          </mat-chip>
+        </div>
+        <p class="text-gray-600 mt-2">Placed on {{order.createdAt | date:'medium'}}</p>
+      </div>
+
+      <!-- Order Items -->
+      <div class="p-6 border-b">
+        <h2 class="text-lg font-semibold mb-4">Order Items</h2>
+        <div class="space-y-4">
+          @for (item of order.items; track item.id) {
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <img [src]="item.product.coverImage" [alt]="item.product.name" 
+                     class="w-16 h-16 object-cover rounded">
+                <div>
+                  <h3 class="font-medium">{{item.product.name}}</h3>
+                  <p class="text-gray-600">Quantity: {{item.quantity}}</p>
+                </div>
+              </div>
+              <p class="font-medium">{{item.product.price * item.quantity}} FCFA</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Shipping Address -->
+      <div class="p-6 border-b">
+        <h2 class="text-lg font-semibold mb-4">Shipping Address</h2>
+        <p>{{order.shippingAddress?.addressLine1}}</p>
+        @if (order.shippingAddress?.addressLine2) {
+          <p>{{order.shippingAddress?.addressLine2}}</p>
+        }
+        <p>{{order.shippingAddress?.city}}, {{order.shippingAddress?.state}}</p>
+        <p>{{order.shippingAddress?.country}}</p>
+        @if (order.shippingAddress?.phone) {
+          <p class="mt-2">Phone: {{order.shippingAddress?.phone}}</p>
+        }
+        <p>
+          <span class="font-semibold">Delivery zone:</span> {{order.shippingAddress?.zone?.name}}
+        </p>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="p-6 border-b">
+        <h2 class="text-lg font-semibold mb-4">Order Summary</h2>
+        <div class="space-y-2">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span>{{order.subtotal}} FCFA</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Delivery Fee</span>
+            <span>{{order.shippingAddress?.zone?.fee}} FCFA</span>
+          </div>
+          <div class="flex justify-between font-semibold">
+            <span>Total</span>
+            <span>{{order.total}} FCFA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Actions -->
+      @if (order.status !== 'delivered' && order.status !== 'cancelled') {
+        <div class="p-6">
+          <h2 class="text-lg font-semibold mb-4">Actions</h2>
+          <div class="flex gap-4">
+            @switch (order.status) {
+              @case ('pending') {
+                <button mat-raised-button color="primary" 
+                        [disabled]="isProcessing"
+                        (click)="updateOrderStatus(order.id, 'processing')">
+                  Mark as Processing
+                </button>
+              }
+              @case ('processing') {
+                <button mat-raised-button color="primary" 
+                        [disabled]="isProcessing"
+                        (click)="updateOrderStatus(order.id, 'shipped')">
+                  Mark as Shipped
+                </button>
+              }
+              @case ('shipped') {
+                <button mat-raised-button color="primary" 
+                        [disabled]="isProcessing"
+                        (click)="updateOrderStatus(order.id, 'delivered')">
+                  Mark as Delivered
+                </button>
+              }
+            }
+            @if (order.status === 'pending' || order.status === 'processing' || order.status === 'shipped') {
+              <button mat-stroked-button color="warn" 
+                      [disabled]="isProcessing"
+                      (click)="updateOrderStatus(order.id, 'cancelled')">
+                Cancel Order
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
