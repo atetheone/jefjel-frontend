@@ -19,15 +19,26 @@ export class OrderService {
       .pipe(map(response => response.data));
   }
 
+  getTenantOrders(): Observable<OrderResponse[]> {
+    return this.http.get<ApiResponse<OrderResponse[]>>(`${this.baseUrl}`)
+      .pipe(map((response: ApiResponse<OrderResponse[]>) => response.data));
+  }
+
   getUserOrders(): Observable<OrderResponse[]> {
 
-    return this.http.get<ApiResponse<OrderResponse[]>>(`${this.baseUrl}`)
+    return this.http.get<ApiResponse<OrderResponse[]>>(`${this.baseUrl}/me`)
       .pipe(map((response: ApiResponse<OrderResponse[]>) => response.data));
   }
 
   getOrder(id: number): Observable<OrderResponse> {
     return this.http.get<ApiResponse<OrderResponse>>(`${this.baseUrl}/${id}`)
-      .pipe(map(response => response.data));
+      .pipe(
+        map(response => {
+          console.log('Order details: ' + JSON.stringify(response.data, null, 3));
+
+          return response.data;
+        })
+      );
   }
 
   updateOrderStatus(orderId: number, status: string) {
