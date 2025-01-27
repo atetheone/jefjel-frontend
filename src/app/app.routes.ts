@@ -22,6 +22,7 @@ import { ProfileComponent } from '#features/dashboard/components/profile/profile
 import { CartOverviewComponent } from '#features/cart/cart-overview/cart-overview.component';
 import { CheckoutComponent } from '#features/checkout/checkout.component';
 import { OrdersComponent } from '#features/orders/orders.component'
+import { TenantOrdersComponent } from '#features/tenant-orders/tenant-orders.component'
 
 import { USER_ROUTES } from '#features/users/users.routes';
 import { ROLES_ROUTES } from '#features/roles/roles.routes';
@@ -75,7 +76,6 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AdminLayoutComponent,
-    canActivate: [authGuard, adminGuard],
     children: [
       { 
         path: '', 
@@ -94,14 +94,19 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            component: OrdersComponent,
+            component: TenantOrdersComponent,
             data: { breadcrumb: 'Orders' }
           },
           {
             path: ':id',
             component: OrderDetailsComponent,
             data: { breadcrumb: 'Order Details' }
-          }
+          },
+          {
+            path: 'users/me',
+            component: OrdersComponent,
+            data: { breadcrumb: 'My orders' }
+          },
         ]
       },
       {
@@ -110,7 +115,8 @@ export const routes: Routes = [
           .then(m => m.ProfileComponent),
         data: { breadcrumb: 'User profile' }
       }
-    ]
+    ],
+    canActivate: [authGuard]
   },
   {
     path: 'set-password/:token',
