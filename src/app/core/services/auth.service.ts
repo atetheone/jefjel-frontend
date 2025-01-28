@@ -178,4 +178,8 @@ export class AuthService {
       panelClass: [`${type}-toast`, 'custom-toast'] // Apply custom styles based on type
     });
   }
+
+  getToken(): string {
+    return localStorage.getItem('token') ?? '';
+  }
 }
