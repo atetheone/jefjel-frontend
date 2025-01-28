@@ -66,7 +66,9 @@ export class MarketplaceComponent implements OnInit {
     this.router.navigate(['/markets', marketId, 'products', productId]);
   }
 
-  viewAllMarkets() {}
+  viewAllMarkets() {
+    this.router.navigate(['/markets']);
+  }
 
   loadFeaturedMarkets(): void {
     this.marketService.getFeaturedMarkets().subscribe({

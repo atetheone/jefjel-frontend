@@ -1,1 +1,91 @@
-<p>markets works!</p>
+<!-- client/src/app/features/marketplace/markets/markets.component.html -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header Section -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">Discover Markets</h1>
+    <p class="text-gray-600">Browse and find unique markets from our verified sellers</p>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Search -->
+      <mat-form-field class="w-full">
+        <mat-label>Search markets</mat-label>
+        <input matInput [formControl]="searchControl" placeholder="Search by name...">
+        <mat-icon matPrefix class="mr-2">search</mat-icon>
+      </mat-form-field>
+
+      <!-- Status Filter -->
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="statusFilter" (selectionChange)="loadMarkets()">
+          <mat-option value="all">All Status</mat-option>
+          <mat-option value="active">Active</mat-option>
+          <mat-option value="inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Sort By -->
+      <mat-form-field>
+        <mat-label>Sort By</mat-label>
+        <mat-select [(ngModel)]="sortBy" (selectionChange)="loadMarkets()">
+          <mat-option value="rating">Rating</mat-option>
+          <mat-option value="products">Product Count</mat-option>
+          <mat-option value="name">Name</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Markets Grid -->
+  @if (markets$ | async; as vm) {
+    @switch (vm.status) {
+      @case ('loading') {
+        <div class="flex justify-center items-center p-8">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+      @case ('error') {
+        <div class="text-center p-8">
+          <mat-icon class="text-6xl text-red-500">error_outline</mat-icon>
+          <p class="mt-2 text-gray-600">{{vm.error}}</p>
+          <button mat-raised-button color="primary" class="mt-4" (click)="loadMarkets()">
+            Retry
+          </button>
+        </div>
+      }
+      @case ('success') {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (market of vm.data; track market.id) {
+            <mat-card class="market-card cursor-pointer hover:shadow-lg transition-shadow"
+                      [routerLink]="['/markets', market.id]">
+              <img mat-card-image [src]="market.coverImage" [alt]="market.name" 
+                   class="h-48 w-full object-cover">
+              <mat-card-content class="p-4">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h3 class="text-xl font-semibold mb-2">{{market.name}}</h3>
+                    <p class="text-gray-600 mb-2 line-clamp-2">{{market.description}}</p>
+                  </div>
+                  <mat-chip-set>
+                    <mat-chip [color]="market.status === 'active' ? 'primary' : 'warn'" selected>
+                      {{market.status}}
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                  <div class="flex items-center">
+                    <mat-icon class="text-yellow-400 mr-1">star</mat-icon>
+                    <span>{{market.rating}}</span>
+                  </div>
+                  <span class="text-gray-600">{{market.productCount}} products</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
+    }
+  }
+</div>
