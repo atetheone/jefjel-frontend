@@ -1,3 +1,4 @@
+// order-details.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '#shared/material/material.module';
@@ -5,8 +6,17 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { OrderResponse } from '#types/order';
 import { OrderService } from '#shared/services/order.service';
 import { ToastService } from '#shared/services/toast.service';
-import { NotificationService } from '#shared/services/notification.service'
-import { Observable, switchMap, Subscription } from 'rxjs';
+import { NotificationService } from '#shared/services/notification.service';
+import { Observable, Subject, switchMap, takeUntil, filter } from 'rxjs';
+import { NotificationResponse } from '#core/types/notification';
+
+interface OrderStatusNotification extends NotificationResponse {
+  data: {
+    orderId: number;
+    status: string;
+    previousStatus?: string;
+  };
+}
 
 @Component({
   selector: 'app-order-details',
@@ -15,8 +25,8 @@ import { Observable, switchMap, Subscription } from 'rxjs';
   styleUrl: './order-details.component.sass'
 })
 export class OrderDetailsComponent implements OnInit, OnDestroy {
-  notificationSubscription: Subscription | null = null
-  order$: Observable<OrderResponse>;
+  private destroy$ = new Subject<void>();
+  order$!: Observable<OrderResponse>;
   isProcessing = false;
   orderId!: number;
 
@@ -26,65 +36,87 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private notificationService: NotificationService
   ) {
+    this.initializeOrder();
+  }
+
+  private initializeOrder() {
     this.order$ = this.route.params.pipe(
       switchMap(params => {
-        this.orderId = params['id'];
-        this.setupNotificationListener()
-        return this.orderService.getOrder(this.orderId)
+        this.orderId = +params['id'];
+        this.setupNotificationListener();
+        return this.orderService.getOrder(this.orderId);
       })
     );
-
   }
 
-  ngOnInit(): void {
-    this.notificationService.sayHello().subscribe({
-      next: (data) => console.log('Hello response:', data),
-      error: (error) => console.error('Socket error:', error)
-    });
-  }
+  ngOnInit(): void {}
 
   updateOrderStatus(orderId: number, status: string) {
+    if (this.isProcessing) return;
+    
     this.isProcessing = true;
-    this.orderService.updateOrderStatus(orderId, status).subscribe({
-      next: () => {
-        this.toastService.success('Order status updated successfully');
-        this.refreshOrder(orderId);
-      },
-      error: () => {
-        console.error('Failed to update order status');
-        this.toastService.error('Failed to update order status');
-      },
-      complete: () => {
-        this.isProcessing = false;
-      }
-    });
+    this.orderService.updateOrderStatus(orderId, status)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.toastService.success('Order status updated successfully');
+          this.refreshOrder();
+        },
+        error: (error) => {
+          console.error('Failed to update order status:', error);
+          this.toastService.error('Failed to update order status');
+        },
+        complete: () => {
+          this.isProcessing = false;
+        }
+      });
   }
 
-  private refreshOrder(orderId: number) {
-    this.order$ = this.orderService.getOrder(orderId);
+  private refreshOrder() {
+    this.order$ = this.orderService.getOrder(this.orderId);
   }
 
-  getStatusColor(status: string) {
+  getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
-      case 'pending': return 'warn';
-      case 'processing': return 'primary';
-      case 'shipped': return 'primary';
-      case 'delivered': return 'success';
-      case 'cancelled': return 'error';
-      default: return 'warn';
+      case 'pending':
+        return 'warn';
+      case 'processing':
+      case 'shipped':
+        return 'primary';
+      case 'delivered':
+        return 'success';
+      case 'cancelled':
+        return 'error';
+      default:
+        return 'warn';
     }
   }
 
-  setupNotificationListener() {
-    this.notificationSubscription = this.notificationService.notifications$
-    .subscribe(notification => {
-      if (notification?.type === 'order_status' && notification.data.orderId === this.orderId) {
-        this.updateOrderStatus(notification.data, notification.data.status)
-      }
-    })
+  private setupNotificationListener() {
+    this.notificationService.notifications$
+      .pipe(
+        takeUntil(this.destroy$),
+        filter((notification): notification is OrderStatusNotification => 
+          notification !== null &&
+          notification.type === 'order:status_updated' && 
+          notification?.data?.orderId === this.orderId
+        )
+      )
+      .subscribe(notification => {
+        this.refreshOrder();
+        const statusMessage = notification.data['previousStatus'] 
+          ? `from ${notification.data['previousStatus']} to ${notification.data['status']}`
+          : `to ${notification.data['status']}`;
+          
+        this.toastService.info(
+          `Order status changed ${statusMessage}`,
+          'Order Status Updated'
+        );
+      });
   }
 
   ngOnDestroy() {
-    this.notificationSubscription?.unsubscribe()
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
