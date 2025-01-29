@@ -3,7 +3,7 @@ export interface NotificationResponse {
   type: string;
   title: string;
   message: string;
-  data?: Record<string, any>;
+  data?: any
   isRead: boolean;
   userId: number;
   tenantId: number;

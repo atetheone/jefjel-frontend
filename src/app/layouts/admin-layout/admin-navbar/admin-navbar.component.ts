@@ -4,11 +4,11 @@ import { RouterModule, Router } from '@angular/router';
 import { MaterialModule } from '#shared/material/material.module';
 import { AuthService } from '#core/services/auth.service';
 import { NotificationService } from '#shared/services/notification.service';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { NotificationResponse } from '#core/types/notification';
 
 @Component({
   selector: 'app-admin-navbar',
-  standalone: true,
   imports: [MaterialModule, RouterModule, CommonModule],
   templateUrl: './admin-navbar.component.html',
   styleUrl: './admin-navbar.component.sass'
@@ -16,11 +16,11 @@ import { Subscription } from 'rxjs';
 export class AdminNavbarComponent implements OnInit, OnDestroy {
   currentPageTitle = 'Dashboard';
   currentYear = new Date().getFullYear();
-  notifications: any[] = [];
-  @Output() toggleSidenav = new EventEmitter<void>();
-  private notificationSub?: Subscription;
+  notifications: NotificationResponse[] = [];
   unreadCount = 0;
-
+  @Output() toggleSidenav = new EventEmitter<void>();
+  
+  private destroy$ = new Subject<void>();
 
   constructor(
     private notificationService: NotificationService,
@@ -29,53 +29,55 @@ export class AdminNavbarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.notificationSub = this.notificationService.notifications$.subscribe(
-      notification => {
-        if (notification) {
-          this.notifications.unshift(notification);
-          this.unreadCount++;
-        }
-      }
-    );
+    // Subscribe to notifications list
+    this.notificationService.notificationsList$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(notifications => {
+        this.notifications = notifications;
+      });
+
+    // Subscribe to unread count
+    this.notificationService.unreadCount$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(count => {
+        this.unreadCount = count;
+      });
+
+    // Load initial notifications
+    this.notificationService.getNotifications().subscribe();
   }
 
   getNotificationIcon(type: string): string {
     switch (type) {
-      case 'order_status': return 'local_shipping';
-      case 'new_order': return 'shopping_cart';
-      case 'payment_status': return 'payment';
-      case 'inventory_alert': return 'inventory';
-      default: return 'notifications';
+      case 'order:status_updated':
+      case 'order:created': 
+        return 'local_shipping';
+      case 'order:cancelled': 
+        return 'cancel';
+      case 'inventory:low': 
+        return 'inventory_2';
+      case 'inventory:reorder': 
+        return 'shopping_cart';
+      default: 
+        return 'notifications';
     }
   }
 
   markAsRead(notificationId: number) {
-    this.notificationService.markAsRead(notificationId).subscribe(() => {
-      const notification = this.notifications.find(n => n.id === notificationId);
-      if (notification) {
-        notification.isRead = true;
-        this.unreadCount = Math.max(0, this.unreadCount - 1);
-      }
-    });
+    this.notificationService.markAsRead(notificationId).subscribe();
   }
 
   markAllAsRead() {
-    this.notificationService.markAllAsRead().subscribe(() => {
-      this.notifications.forEach(n => n.isRead = true);
-      this.unreadCount = 0;
-    });
+    this.notificationService.markAllAsRead().subscribe();
   }
 
   logout(): void {
-    console.log('Logging out...');
     this.authService.logout();
     this.router.navigate(['/']);
   }
 
   ngOnDestroy() {
-    if (this.notificationSub) {
-      this.notificationSub.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
-
 }
