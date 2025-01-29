@@ -12,7 +12,7 @@ import { NotificationResponse, NotificationCount } from '#core/types/notificatio
   providedIn: 'root'
 })
 export class NotificationService implements OnDestroy {
-  private readonly apiUrl = `${environment.apiUrl}/api/v1/notifications`;
+  private readonly apiUrl = `${environment.apiUrl}/notifications`;
   private socket!: Socket;
   private destroy$ = new Subject<void>();
 
@@ -35,10 +35,16 @@ export class NotificationService implements OnDestroy {
   }
 
   private initializeSocket() {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.warn('No auth token available');
+      return;
+    }
+    
     this.socket = io(environment.wsUrl, {
       transports: ['websocket', 'polling'],
       auth: {
-        token: this.authService.getToken()
+        token: `${token}` // Add Bearer prefix
       }
     });
 
