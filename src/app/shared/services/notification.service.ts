@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Socket, io } from 'socket.io-client';
 import { environment } from '#env/environment';
 import { AuthService } from '#services/auth.service';
+import { SocketService } from '#services/socket.service';
 import { ToastService } from '#shared/services/toast.service';
 import { Subject, Observable, BehaviorSubject, tap, takeUntil } from 'rxjs';
+import { map } from 'rxjs/operators'
 import { ApiResponse } from '#core/types/api_response';
 import { NotificationResponse, NotificationCount } from '#core/types/notification';
 
@@ -13,7 +14,6 @@ import { NotificationResponse, NotificationCount } from '#core/types/notificatio
 })
 export class NotificationService implements OnDestroy {
   private readonly apiUrl = `${environment.apiUrl}/notifications`;
-  private socket!: Socket;
   private destroy$ = new Subject<void>();
 
   private notificationsSubject = new BehaviorSubject<NotificationResponse | null>(null);
@@ -26,29 +26,12 @@ export class NotificationService implements OnDestroy {
 
   constructor(
     private authService: AuthService,
+    private socketService: SocketService,
     private toastService: ToastService,
     private http: HttpClient
   ) {
-    this.initializeSocket();
     this.setupAuthListener();
-    this.loadInitialData();
-  }
-
-  private initializeSocket() {
-    const token = this.authService.getToken();
-    if (!token) {
-      console.warn('No auth token available');
-      return;
-    }
-    
-    this.socket = io(environment.wsUrl, {
-      transports: ['websocket', 'polling'],
-      auth: {
-        token: `${token}` // Add Bearer prefix
-      }
-    });
-
-    this.setupSocketListeners();
+    this.setupSocketListener();
   }
 
   private setupAuthListener() {
@@ -58,50 +41,62 @@ export class NotificationService implements OnDestroy {
         if (user) {
           this.loadInitialData();
         } else {
-          this.notificationsSubject.next(null);
-          this.notificationsListSubject.next([]);
-          this.unreadCountSubject.next(0);
+          this.resetState();
         }
       });
   }
 
-  private setupSocketListeners() {
-    this.socket.on('connect', () => {
-      console.log('Connected to notification service');
+  private setupSocketListener() {
+    this.socketService.on<NotificationResponse>('notification', (notification) => {
+      this.handleNewNotification(notification);
     });
+  }
 
-    this.socket.on('connect_error', (error) => {
-      console.error('Socket connection error:', error);
-    });
+  private handleNewNotification(notification: NotificationResponse) {
+    // Update notifications
+    const currentList = this.notificationsListSubject.value;
+    this.notificationsListSubject.next([notification, ...currentList]);
+    this.notificationsSubject.next(notification);
+    this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
+  
+    // Show toast notification
+    this.showNotificationToast(notification);
+  }
+  
+  private showNotificationToast(notification: NotificationResponse) {
+    switch (notification.type) {
+      case 'inventory:low':
+        this.toastService.warning(notification.message, notification.title);
+        break;
+      case 'order:status_updated':
+        this.toastService.info(notification.message, notification.title);
+        break;
+      case 'order:cancelled':
+        this.toastService.error(notification.message, notification.title);
+        break;
+      case 'payment:failed':
+        this.toastService.error(notification.message, notification.title);
+        break;
+      case 'user:registered':
+      case 'order:created':
+        this.toastService.success(notification.message, notification.title);
+        break;
+      default:
+        this.toastService.info(notification.message, notification.title);
+    }
+  }
 
-    this.socket.on('notification', (notification: NotificationResponse) => {
-      // Update notifications
-      const currentList = this.notificationsListSubject.value;
-      this.notificationsListSubject.next([notification, ...currentList]);
-      this.notificationsSubject.next(notification);
-      this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
-
-      // Show toast based on type
-      switch (notification.type) {
-        case 'inventory:low':
-          this.toastService.warning(notification.message, notification.title);
-          break;
-        case 'order:status_updated':
-          this.toastService.info(notification.message, notification.title);
-          break;
-        case 'order:cancelled':
-          this.toastService.error(notification.message, notification.title);
-          break;
-        default:
-          this.toastService.success(notification.message, notification.title);
-      }
-    });
+  private resetState() {
+    this.notificationsSubject.next(null);
+    this.notificationsListSubject.next([]);
+    this.unreadCountSubject.next(0);
   }
 
   private loadInitialData() {
     this.getNotifications().subscribe();
     this.getUnreadCount().subscribe();
   }
+
 
   getNotifications(type?: string): Observable<ApiResponse<NotificationResponse[]>> {    
     return this.http.get<ApiResponse<NotificationResponse[]>>(this.apiUrl, {
@@ -159,12 +154,13 @@ export class NotificationService implements OnDestroy {
     );
   }
 
+  getNotificationById(id: number): Observable<NotificationResponse> {
+    return this.http.get<ApiResponse<NotificationResponse>>(`${this.apiUrl}/${id}`)
+      .pipe(map(response => response.data));
+  }
+  
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-    
-    if (this.socket) {
-      this.socket.disconnect();
-    }
   }
 }
