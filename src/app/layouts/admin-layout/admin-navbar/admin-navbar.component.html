@@ -9,7 +9,9 @@
   
   <div class="flex items-center space-x-4">
     <!-- Notifications -->
-    <button mat-icon-button [matMenuTriggerFor]="notificationsMenu">
+    <app-notifications-menu></app-notifications-menu>
+
+    <!-- <button mat-icon-button [matMenuTriggerFor]="notificationsMenu">
       <mat-icon [matBadge]="unreadCount" 
                 [matBadgeHidden]="unreadCount === 0" 
                 matBadgeColor="warn">
@@ -52,7 +54,7 @@
         </div>
       }
     </mat-menu>
-    
+     -->
     <!-- User Profile -->
     <button mat-icon-button [matMenuTriggerFor]="userMenu">
       <mat-icon>account_circle</mat-icon>

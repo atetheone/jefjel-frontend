@@ -6,10 +6,17 @@ import { AuthService } from '#core/services/auth.service';
 import { NotificationService } from '#shared/services/notification.service';
 import { Subject, takeUntil } from 'rxjs';
 import { NotificationResponse } from '#core/types/notification';
+import { NotificationsMenuComponent } from '#shared/components/notifications/notifications-menu.component';
+
 
 @Component({
   selector: 'app-admin-navbar',
-  imports: [MaterialModule, RouterModule, CommonModule],
+  imports: [
+    MaterialModule, 
+    RouterModule,
+    CommonModule,
+    NotificationsMenuComponent,
+  ],
   templateUrl: './admin-navbar.component.html',
   styleUrl: './admin-navbar.component.sass'
 })
