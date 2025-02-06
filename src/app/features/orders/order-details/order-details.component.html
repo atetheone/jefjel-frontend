@@ -73,30 +73,7 @@
         <div class="p-6">
           <h2 class="text-lg font-semibold mb-4">Actions</h2>
           <div class="flex gap-4">
-            @switch (order.status) {
-              @case ('pending') {
-                <button mat-raised-button color="primary" 
-                        [disabled]="isProcessing"
-                        (click)="updateOrderStatus(order.id, 'processing')">
-                  Mark as Processing
-                </button>
-              }
-              @case ('processing') {
-                <button mat-raised-button color="primary" 
-                        [disabled]="isProcessing"
-                        (click)="updateOrderStatus(order.id, 'shipped')">
-                  Mark as Shipped
-                </button>
-              }
-              @case ('shipped') {
-                <button mat-raised-button color="primary" 
-                        [disabled]="isProcessing"
-                        (click)="updateOrderStatus(order.id, 'delivered')">
-                  Mark as Delivered
-                </button>
-              }
-            }
-            @if (order.status === 'pending' || order.status === 'processing' || order.status === 'shipped') {
+            @if (order.status === 'pending' || order.status === 'processing') {
               <button mat-stroked-button color="warn" 
                       [disabled]="isProcessing"
                       (click)="updateOrderStatus(order.id, 'cancelled')">
