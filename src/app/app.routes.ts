@@ -29,6 +29,7 @@ import { ROLES_ROUTES } from '#features/roles/roles.routes';
 import { TENANTS_ROUTES } from '#features/tenants/tenants.routes';
 import { PRODUCTS_ROUTES } from '#features/products/products.routes';
 import { MARKETPLACE_ROUTES } from '#features/marketplace/marketplace.routes';
+import { NOTIFICATION_ROUTES } from '#features/notifications/notification.routes';
 
 import { authGuard } from '#guards/auth.guard';
 import { adminGuard } from '#guards/admin.guard';
@@ -89,6 +90,7 @@ export const routes: Routes = [
       },
       { path: 'roles', children: ROLES_ROUTES },
       { path: 'products', children: PRODUCTS_ROUTES },
+      { path: 'notifications', children: NOTIFICATION_ROUTES },
       {
         path: 'orders',
         children: [
