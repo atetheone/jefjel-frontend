@@ -72,6 +72,7 @@ export class ProductsComponent implements OnInit {
 
     this.productService.getProducts().subscribe({
       next: (response) => {
+        console.log(JSON.stringify(response.data, null, 3))
         this.productsSubject.next({
           status: 'success',
           data: response.data,
