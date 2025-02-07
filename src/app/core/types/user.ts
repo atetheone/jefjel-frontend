@@ -1,5 +1,14 @@
 import { Role, RoleResponse } from './role'
 
+export interface UserProfile {
+  id: number;
+  userId: number;
+  bio?: string;
+  phone?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface User {
   id: number
   username: string
@@ -10,6 +19,7 @@ export interface User {
   status: string
   lastLoginAt?: string | null
   roles: Role[]
+  profile?: UserProfile;
 }
 
 export interface UserResponse {
@@ -24,4 +34,5 @@ export interface UserResponse {
   lastLoginAt?: string | null
   roles: RoleResponse[]
   status?: string
+  profile?: UserProfile
 }
