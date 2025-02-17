@@ -2,16 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { DeliveryService } from '../services/delivery.service';
 import { ToastService } from '#shared/services/toast.service';
 import { MaterialModule } from '#shared/material/material.module';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ZoneService } from '#shared/services/zone.service';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DeliveryResponse } from '#types/delivery';
 import { DeliveryZoneResponse } from '#types/zone';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-my-zones',
-  imports: [MaterialModule]
+  imports: [MaterialModule, CurrencyPipe, ReactiveFormsModule, CommonModule],
   templateUrl: './my-zones.component.html'
 })
 export class MyZonesComponent implements OnInit {
