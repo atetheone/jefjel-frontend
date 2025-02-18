@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { DeliveryResponse } from '#types/delivery';
 import { DeliveryZoneResponse } from '#types/zone';
 import { MatDialog } from '@angular/material/dialog';
+import { DeliveryNotesDialog } from './delivery-notes-dialog.component';
 
 @Component({
   selector: 'app-my-deliveries',
@@ -64,21 +65,21 @@ export class MyDeliveriesComponent implements OnInit {
   }
 
   updateStatus(deliveryId: number, status: string) {
-    // const dialogRef = this.dialog.open(DeliveryNotesDialog, {
-    //   width: '400px',
-    //   data: { status }
-    // });
+    const dialogRef = this.dialog.open(DeliveryNotesDialog, {
+      width: '400px',
+      data: { status }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.deliveryService.updateDeliveryStatus(deliveryId, status, result.notes).subscribe({
-    //       next: () => {
-    //         this.toastService.success('Delivery status updated successfully');
-    //         this.loadDeliveries();
-    //       },
-    //       error: () => this.toastService.error('Failed to update delivery status')
-    //     });
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deliveryService.updateDeliveryStatus(deliveryId, status, result.notes).subscribe({
+          next: () => {
+            this.toastService.success('Delivery status updated successfully');
+            this.loadDeliveries();
+          },
+          error: () => this.toastService.error('Failed to update delivery status')
+        });
+      }
+    });
   }
 }
