@@ -39,15 +39,15 @@
                 <mat-card-content>
                   <div class="mt-2">
                     <strong>Delivery Address:</strong>
-                    <p>{{ delivery.order.shippingAddress.addressLine1 }}</p>
-                    @if (delivery.order.shippingAddress.addressLine2) {
-                      <p>{{ delivery.order.shippingAddress.addressLine2 }}</p>
+                    <p>{{ delivery.order.shippingAddress?.addressLine1 }}</p>
+                    @if (delivery.order.shippingAddress?.addressLine2) {
+                      <p>{{ delivery.order.shippingAddress?.addressLine2 }}</p>
                     }
-                    <p>{{ delivery.order.shippingAddress.city }}</p>
-                    @if (delivery.order.shippingAddress.phone) {
+                    <p>{{ delivery.order.shippingAddress?.city }}</p>
+                    @if (delivery.order.shippingAddress?.phone) {
                       <p>
                         <mat-icon class="align-middle">phone</mat-icon>
-                        {{ delivery.order.shippingAddress.phone }}
+                        {{ delivery.order.shippingAddress?.phone }}
                       </p>
                     }
                   </div>
