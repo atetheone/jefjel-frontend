@@ -22,5 +22,17 @@ export class PermissionService {
   createPermission(perm: Partial<PermissionResponse>): Observable<ApiResponse<PermissionResponse>> {
     return this.http.post<ApiResponse<PermissionResponse>>(this.apiUrl, perm);
   }
+
+  getPermissionGroups(): any {
+    throw new Error("Method not implemented.");
+  }
+
+  updatePermission(permId: number, perm: Partial<PermissionResponse>): Observable<ApiResponse<PermissionResponse>> {
+    return this.http.put<ApiResponse<PermissionResponse>>(`${this.apiUrl}/${permId}`, perm);
+  }
+
+  deletePermission(permId: number): Observable<ApiResponse<PermissionResponse>> {
+    return this.http.delete<ApiResponse<PermissionResponse>>(`${this.apiUrl}/${permId}`);
+  }
   
 }
