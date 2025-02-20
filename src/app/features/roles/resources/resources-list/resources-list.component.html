@@ -1,0 +1,106 @@
+<div class="p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl">Resources</h2>
+    <div class="flex gap-2">
+      <mat-form-field class="w-64">
+        <mat-label>Search Resources</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search...">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Create Resource
+      </button>
+    </div>
+  </div>
+
+  <div class="mat-elevation-z2">
+    <table mat-table [dataSource]="dataSource" class="w-full" matSort>
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let resource">
+          <div>
+            <div class="font-medium">{{resource.displayName}}</div>
+            <div class="text-sm text-gray-500">{{resource.name}}</div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let resource">{{resource.description}}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Available Actions</th>
+        <td mat-cell *matCellDef="let resource">
+          <mat-chip-grid>
+            @for (action of resource.availableActions; track action) {
+              <mat-chip [color]="getActionColor(action)" selected>
+                {{action}}
+              </mat-chip>
+            }
+          </mat-chip-grid>
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let resource">
+          <mat-slide-toggle
+            [checked]="resource.isActive"
+            (change)="toggleStatus(resource)"
+            [color]="'primary'">
+            {{resource.isActive ? 'Active' : 'Inactive'}}
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <!-- Manage Column -->
+      <ng-container matColumnDef="manage">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let resource">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Resource actions">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openEditDialog(resource)">
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item (click)="syncPermissions(resource)">
+              <mat-icon>sync</mat-icon>
+              <span>Sync Permissions</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="confirmDelete(resource)" color="warn">
+              <mat-icon color="warn">delete</mat-icon>
+              <span class="text-red-600">Delete</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- No Data Row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="5">
+          <div class="flex flex-col items-center py-8">
+            <mat-icon class="text-4xl text-gray-400">folder_open</mat-icon>
+            <p class="mt-2 text-gray-500">No resources found</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of resources">
+    </mat-paginator>
+  </div>
+</div>
