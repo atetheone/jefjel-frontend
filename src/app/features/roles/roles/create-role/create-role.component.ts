@@ -5,7 +5,7 @@ import { MaterialModule } from '#shared/material/material.module';
 import { RoleService } from '#services/role.service';
 import { PermissionService } from '#services/permission.service';
 import { ToastService } from '#shared/services/toast.service';
-import { Permission, PermissionResponse, PermissionGroup } from '#types/permission';
+import { Permission, PermissionResponse, PermissionGroup, PermissionScope } from '#types/permission';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -58,10 +58,10 @@ export class CreateRoleComponent implements OnInit {
     const groups = permissions.reduce((acc, permission) => {
       const existingGroup = acc.find(g => g.resource === permission.resource);
       if (existingGroup) {
-        existingGroup.actions.push({
+        existingGroup.permissions.push({
           id: permission.id,
           action: permission.action,
-          selected: false
+          scope: PermissionScope.ALL,
         });
       } else {
         acc.push({
@@ -115,7 +115,7 @@ export class CreateRoleComponent implements OnInit {
     );
 
     if (existingGroup) {
-      existingGroup.actions.push({
+      existingGroup.permissions.push({
         id: permission.id,
         action: permission.action,
         selected: false
